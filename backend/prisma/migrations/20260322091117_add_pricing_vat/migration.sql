@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "pricing_config" ADD COLUMN     "vatEnabled" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "vatRate" DOUBLE PRECISION NOT NULL DEFAULT 0.07;

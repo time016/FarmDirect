@@ -1,0 +1,378 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum Role {
+  BUYER
+  SELLER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CONFIRMED
+  SHIPPING
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  PROMPTPAY
+  CREDIT_CARD
+  BANK_TRANSFER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum FarmApprovalAction {
+  SUBMITTED
+  APPROVED
+  REJECTED
+  REVOKED
+}
+
+enum FarmAdminStatus {
+  PENDING
+  ACCEPTED
+}
+
+// ==================== MODELS ====================
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  password            String?
+  name                String
+  phone               String?
+  avatar              String?
+  role                Role      @default(BUYER)
+  isActive            Boolean   @default(true)
+  emailVerified       Boolean   @default(false)
+  emailVerifyCode     String?
+  emailVerifyExpiry   DateTime?
+  googleId            String?   @unique
+  lineId              String?   @unique
+  passwordResetToken  String?
+  passwordResetExpiry DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  farm             Farm?
+  orders           Order[]
+  reviews          Review[]
+  addresses        Address[]
+  cart             Cart?
+  farmReviews      FarmReview[]
+  farmLikes        FarmLike[]
+  farmApprovalLogs FarmApprovalLog[]
+  farmAdmins           FarmAdmin[]
+  invitedFarmAdmins    FarmAdmin[] @relation("FarmAdminInviter")
+  notifications    Notification[]
+
+  @@map("users")
+}
+
+model Farm {
+  id          String   @id @default(uuid())
+  slug        String?  @unique
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  name        String
+  description String?
+  location    String
+  province    String
+  district    String?
+  subdistrict String?
+  zipCode     String?
+  image        String?
+  images       String[]
+  videos       String[]
+  isVerified   Boolean  @default(false)
+  isSuspended  Boolean  @default(false)
+  rejectReason String?
+  shippingRate         Float?  // null = ใช้ platform default
+  shippingWeightLimitKg Float? // null = ใช้ platform default
+  shippingPerKgRate    Float?  // null = ใช้ platform default
+  shippingFreeThreshold Float? // null = ใช้ platform default
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  products         Product[]
+  farmViews        FarmView[]
+  farmReviews      FarmReview[]
+  farmLikes        FarmLike[]
+  approvalLogs     FarmApprovalLog[]
+  farmAdmins       FarmAdmin[]
+
+  @@map("farms")
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  image    String?
+  isActive Boolean   @default(true)
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  farmId      String
+  farm        Farm     @relation(fields: [farmId], references: [id])
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  unit        String   // kg, piece, bundle, box
+  stock         Int      @default(0)
+  reservedStock Int      @default(0)
+  weightKg      Float    @default(0.5)  // น้ำหนักต่อหน่วย (kg) — ถ้า unit=กิโลกรัม ใช้ quantity แทน
+  images        String[]
+  videos        String[]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderItems   OrderItem[]
+  reviews      Review[]
+  cartItems    CartItem[]
+  productViews ProductView[]
+
+  @@map("products")
+}
+
+model FarmView {
+  id       String   @id @default(uuid())
+  farmId   String
+  farm     Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  viewedAt DateTime @default(now())
+
+  @@index([farmId, viewedAt])
+  @@map("farm_views")
+}
+
+model ProductView {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  viewedAt  DateTime @default(now())
+
+  @@index([productId, viewedAt])
+  @@map("product_views")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+model Address {
+  id          String  @id @default(uuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  label       String  // home, office
+  recipient   String
+  phone       String
+  address     String
+  subdistrict String
+  district    String
+  province    String
+  zipCode     String
+  isDefault   Boolean @default(false)
+
+  orders Order[]
+
+  @@map("addresses")
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  addressId   String
+  address     Address     @relation(fields: [addressId], references: [id])
+  status      OrderStatus @default(PENDING)
+  totalAmount Decimal     @db.Decimal(10, 2)
+  shippingFee Decimal     @default(0) @db.Decimal(10, 2)
+  note            String?
+  cancelNote      String?
+  trackingNumber  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  items   OrderItem[]
+  payment Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2) // ราคา ณ เวลาสั่งซื้อ
+
+  @@map("order_items")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique
+  order         Order         @relation(fields: [orderId], references: [id])
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  amount        Decimal       @db.Decimal(10, 2)
+  transactionId String?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  rating    Int      // 1-5
+  comment   String?
+  images    String[]
+  quantity  Int?     // จำนวนที่สั่งซื้อ (จาก OrderItem)
+  createdAt DateTime @default(now())
+
+  @@map("reviews")
+}
+
+model FarmReview {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  farmId    String
+  farm      Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, farmId])
+  @@map("farm_reviews")
+}
+
+model FarmLike {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  farmId    String
+  farm      Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, farmId])
+  @@map("farm_likes")
+}
+
+model ShippingConfig {
+  id            String   @id @default("default")
+  baseRate      Float    @default(40)   // ค่าส่งพื้นฐาน
+  weightLimitKg Float    @default(3)    // น้ำหนักฟรี (kg)
+  perKgRate     Float    @default(15)   // ราคา/kg ที่เกิน
+  freeThreshold Float    @default(500)  // ฟรีค่าส่งถ้า order >= บาทนี้
+  minBaseRate   Float    @default(20)   // farm override ต่ำสุดที่อนุญาต
+  maxBaseRate   Float    @default(80)   // farm override สูงสุดที่อนุญาต
+  updatedAt     DateTime @updatedAt
+
+  @@map("shipping_config")
+}
+
+model PricingConfig {
+  id             String   @id @default("default")
+  pricingModel   String   @default("A")   // "A" = หัก % จากฟาร์ม | "B" = บวก % ให้ลูกค้า
+  commissionRate Float    @default(0.10)
+  vatEnabled     Boolean  @default(false)
+  vatRate        Float    @default(0.07)  // 7% fixed
+  updatedAt      DateTime @updatedAt
+
+  @@map("pricing_config")
+}
+
+model FarmApprovalLog {
+  id        String             @id @default(uuid())
+  farmId    String
+  farm      Farm               @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?              @relation(fields: [actorId], references: [id])
+  action    FarmApprovalAction
+  note      String?
+  createdAt DateTime           @default(now())
+
+  @@map("farm_approval_logs")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  body      String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model FarmAdmin {
+  id        String          @id @default(uuid())
+  farmId    String
+  farm      Farm            @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User            @relation(fields: [userId], references: [id])
+  status    FarmAdminStatus @default(PENDING)
+  invitedBy String?
+  inviter   User?           @relation("FarmAdminInviter", fields: [invitedBy], references: [id])
+  createdAt DateTime        @default(now())
+
+  @@unique([farmId, userId])
+  @@map("farm_admins")
+}

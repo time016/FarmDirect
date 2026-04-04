@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* Tailwind v4: class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #f3f4f6;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #111111;
+  --border: #2a2a2a;
+  --muted: #a1a1aa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Light mode — bg-white เป็น card surface */
+:root .bg-white {
+  background-color: #eeeff2 !important;
+}
+
+:root .bg-gray-50 {
+  background-color: #f9fafb !important;
+}
+
+input,
+textarea {
+  color: #374151;
+  background-color: #ffffff;
+}
+
+select {
+  color: #6b7280;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* ============================================================
+   DARK MODE — Black bg + Gray components
+   bg:      #000000  (pure black)
+   card:    #111111  (main surface)
+   raised:  #1a1a1a  (hover / nested)
+   subtle:  #0a0a0a  (inset / bg-gray-50)
+   ============================================================ */
+
+/* Surfaces */
+.dark .bg-white       { background-color: #111111 !important; }
+.dark .bg-gray-50     { background-color: #0a0a0a !important; }
+.dark .bg-gray-100    { background-color: #141414 !important; }
+.dark .bg-gray-200    { background-color: #1a1a1a !important; }
+.dark .hover\:bg-gray-50:hover   { background-color: #141414 !important; }
+.dark .hover\:bg-gray-100:hover  { background-color: #1a1a1a !important; }
+.dark .hover\:bg-white:hover     { background-color: #1a1a1a !important; }
+
+/* Borders — subtle, แทบมองไม่เห็นบน black bg */
+.dark .border-gray-50   { border-color: #161616 !important; }
+.dark .border-gray-100  { border-color: #1c1c1c !important; }
+.dark .border-gray-200  { border-color: #222222 !important; }
+.dark .border-gray-300  { border-color: #2a2a2a !important; }
+
+/* Dividers — cover all Tailwind v4 selector patterns */
+.dark [class*="divide-"] > *,
+.dark [class*="divide-"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1c1c1c !important;
+  border-top-color: #1c1c1c !important;
+  border-bottom-color: #1c1c1c !important;
+}
+
+/* border-t / border-b standalone (ไม่มี color class) */
+.dark .border-t { border-top-color: #1c1c1c !important; }
+.dark .border-b { border-bottom-color: #1c1c1c !important; }
+.dark .border-l { border-left-color: #1c1c1c !important; }
+.dark .border-r { border-right-color: #1c1c1c !important; }
+
+/* Text — white → gray ตามความสำคัญ */
+.dark .text-gray-900   { color: #ffffff !important; }
+.dark .text-gray-800   { color: #f4f4f5 !important; }
+.dark .text-gray-700   { color: #d4d4d8 !important; }
+.dark .text-gray-600   { color: #a1a1aa !important; }
+.dark .text-gray-500   { color: #71717a !important; }
+.dark .text-gray-400   { color: #52525b !important; }
+
+/* Shadows */
+.dark .shadow-sm  { box-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.6) !important; }
+.dark .shadow-md  { box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.7) !important; }
+.dark .shadow-xl  { box-shadow: 0 8px 32px 0 rgb(0 0 0 / 0.8) !important; }
+.dark .hover\:shadow-md:hover { box-shadow: 0 4px 20px 0 rgb(0 0 0 / 0.8) !important; }
+
+/* Accent backgrounds */
+.dark .bg-green-50   { background-color: #0a1a0f !important; }
+.dark .bg-green-100  { background-color: #0f2318 !important; }
+.dark .border-green-100 { border-color: #152a1c !important; }
+.dark .border-green-200 { border-color: #1a3424 !important; }
+.dark .border-red-200   { border-color: #2a1515 !important; }
+.dark .border-red-300   { border-color: #331a1a !important; }
+.dark .border-orange-100 { border-color: #251508 !important; }
+.dark .border-orange-200 { border-color: #2d1a0a !important; }
+.dark .border-orange-300 { border-color: #38200f !important; }
+.dark .border-amber-200  { border-color: #2a2000 !important; }
+.dark .border-amber-300  { border-color: #332800 !important; }
+.dark .border-yellow-200 { border-color: #2a2500 !important; }
+.dark .border-blue-200  { border-color: #0f1e30 !important; }
+.dark .border-blue-300  { border-color: #142438 !important; }
+.dark .bg-red-50    { background-color: #1a0a0a !important; }
+.dark .bg-yellow-50 { background-color: #1a1500 !important; }
+.dark .bg-blue-50   { background-color: #08111f !important; }
+
+/* Inputs & forms */
+.dark input,
+.dark textarea {
+  color: #f4f4f5;
+  background-color: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+.dark select {
+  color: #d4d4d8;
+  background-color: #1a1a1a;
+  border-color: #2a2a2a;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #52525b;
+}
+
+/* Global cursor rules */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+.btn-cancel {
+  border: 1px solid #d1d5db;
+  color: #4b5563; /* gray-600 — แก้ตรงนี้จุดเดียว */
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  transition: background-color 0.15s;
+}
+
+.btn-cancel:hover {
+  background-color: #f9fafb;
+}
+
+.dark .btn-cancel {
+  border-color: #2a2a2a;
+  color: #a1a1aa;
+}
+
+.dark .btn-cancel:hover {
+  background-color: #1a1a1a;
+}
