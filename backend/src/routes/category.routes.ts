@@ -5,7 +5,7 @@ import { authenticate, authorizeRoles } from '../middleware/auth'
 const router = Router()
 
 router.get('/', getCategories)
-router.post('/', authenticate, authorizeRoles('ADMIN'), createCategory)
-router.put('/:id', authenticate, authorizeRoles('ADMIN'), updateCategory)
+router.post('/', authenticate, authorizeRoles('ADMIN', 'HOST'), createCategory)
+router.put('/:id', authenticate, authorizeRoles('ADMIN', 'HOST'), updateCategory)
 
 export default router
