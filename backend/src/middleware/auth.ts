@@ -25,9 +25,9 @@ export const authorizeRoles = (...roles: string[]) => (req: Request, res: Respon
   next()
 }
 
-// Allows SELLER, ADMIN (farm owner), OR any user who is a FarmAdmin of any farm
+// Allows SELLER, ADMIN, HOST (farm owner), OR any user who is a FarmAdmin of any farm
 export const authorizeFarmMember = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.user.role === 'SELLER' || req.user.role === 'ADMIN') return next()
+  if (req.user.role === 'SELLER' || req.user.role === 'ADMIN' || req.user.role === 'HOST') return next()
   const farmAdmin = await prisma.farmAdmin.findFirst({ where: { userId: req.user.id, status: 'ACCEPTED' } })
   if (farmAdmin) return next()
   return res.status(403).json({ message: 'Forbidden' })

@@ -4,7 +4,7 @@ import { authenticate, authorizeRoles } from '../middleware/auth'
 
 const router = Router()
 
-router.use(authenticate, authorizeRoles('ADMIN'))
+router.use(authenticate, authorizeRoles('ADMIN', 'HOST'))
 router.get('/dashboard', getDashboard)
 router.get('/users/search', searchUsers)
 router.get('/users', getUsers)
