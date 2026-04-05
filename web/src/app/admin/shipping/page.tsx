@@ -26,13 +26,13 @@ export default function AdminShippingPage() {
   })
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
   const { data: config, isLoading } = useQuery<ShippingConfig>({
     queryKey: ['admin-shipping'],
     queryFn: () => api.get('/admin/shipping').then((r) => r.data),
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   useEffect(() => {

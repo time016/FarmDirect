@@ -26,7 +26,7 @@ export default function ProductCard({ product }: Props) {
   const { data: myFarm } = useQuery({
     queryKey: ['my-farm'],
     queryFn: () => api.get('/farms/my').then((r) => r.data),
-    enabled: isAuthenticated && (user?.role === 'SELLER' || user?.role === 'ADMIN'),
+    enabled: isAuthenticated && (user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')),
   })
 
   const isOwnFarm = !!(myFarm?.id && product.farm?.id === myFarm.id)
@@ -34,7 +34,7 @@ export default function ProductCard({ product }: Props) {
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     if (!isAuthenticated) { openLogin(); return }
-    if (user?.role === 'ADMIN') { toast.error('แอดมินไม่สามารถสั่งซื้อได้'); return }
+    if ((user?.role === 'ADMIN' || user?.role === 'HOST')) { toast.error('แอดมินไม่สามารถสั่งซื้อได้'); return }
     if (isOwnFarm) { toast.error('ไม่สามารถสั่งซื้อสินค้าของฟาร์มตัวเองได้'); return }
     try {
       await addToCart(product.id, 1)

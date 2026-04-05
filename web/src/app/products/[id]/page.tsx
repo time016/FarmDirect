@@ -58,12 +58,12 @@ export default function ProductDetailPage() {
   const { data: myFarm } = useQuery({
     queryKey: ['my-farm'],
     queryFn: () => api.get('/farms/my').then((r) => r.data),
-    enabled: isAuthenticated && (user?.role === 'SELLER' || user?.role === 'ADMIN'),
+    enabled: isAuthenticated && (user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')),
   })
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) { openLogin(); return }
-    if (user?.role === 'ADMIN') { toast.error('แอดมินไม่สามารถสั่งซื้อได้'); return }
+    if ((user?.role === 'ADMIN' || user?.role === 'HOST')) { toast.error('แอดมินไม่สามารถสั่งซื้อได้'); return }
     if (myFarm?.id && product?.farm?.id === myFarm.id) { toast.error('ไม่สามารถสั่งซื้อสินค้าของฟาร์มตัวเองได้'); return }
     try {
       await addToCart(product.id, qty)

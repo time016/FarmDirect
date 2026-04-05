@@ -1,4 +1,4 @@
-export type Role = 'BUYER' | 'SELLER' | 'ADMIN'
+export type Role = 'BUYER' | 'SELLER' | 'ADMIN' | 'HOST'
 export type OrderStatus = 'PENDING' | 'PAID' | 'CONFIRMED' | 'SHIPPING' | 'DELIVERED' | 'CANCELLED'
 export type PaymentMethod = 'PROMPTPAY' | 'CREDIT_CARD' | 'BANK_TRANSFER'
 export type PaymentStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'REFUNDED'

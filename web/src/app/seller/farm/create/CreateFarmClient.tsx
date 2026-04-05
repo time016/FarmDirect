@@ -17,7 +17,7 @@ export default function CreateFarmClient({ provinces }: { provinces: ProvinceOpt
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
-    if (!isAuthenticated || (user?.role !== 'SELLER' && user?.role !== 'ADMIN')) router.push('/')
+    if (!isAuthenticated || (user?.role !== 'SELLER' && user?.role !== 'ADMIN' && user?.role !== 'HOST')) router.push('/')
   }, [isAuthenticated, user])
 
   const selectedProvince = useMemo(() => provinces.find((p) => p.name_th === form.province) ?? null, [form.province, provinces])

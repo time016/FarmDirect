@@ -33,7 +33,7 @@ const selectCls = (disabled: boolean) =>
 export default function EditFarmClient({ provinces }: { provinces: ProvinceOption[] }) {
   const { user, isAuthenticated } = useAuthStore()
   const qc = useQueryClient()
-  const isOwner = user?.role === 'SELLER' || user?.role === 'ADMIN'
+  const isOwner = user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')
   const imageInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [newVideoUrl, setNewVideoUrl] = useState('')

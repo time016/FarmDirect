@@ -377,7 +377,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
             </div>
             <div>
               <label className="text-base text-gray-600 mb-1.5 block font-medium">บทบาท</label>
-              <input value={user?.role === 'BUYER' ? 'ผู้ซื้อ' : user?.role === 'SELLER' ? 'ผู้ขาย' : user?.role === 'ADMIN' ? 'แอดมิน' : ''} disabled
+              <input value={user?.role === 'BUYER' ? 'ผู้ซื้อ' : user?.role === 'SELLER' ? 'ผู้ขาย' : user?.role === 'HOST' ? 'เจ้าของระบบ' : user?.role === 'ADMIN' ? 'แอดมิน' : ''} disabled
                 className="w-full border border-gray-200 rounded-lg px-4 py-3 text-base bg-gray-50 text-gray-500" />
 
               {user?.role === 'BUYER' && !confirmSeller && (

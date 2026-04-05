@@ -39,7 +39,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   const membershipsFetched = membershipsStatus === 'success' || membershipsStatus === 'error'
   const isAllowed =
     !isAuthenticated ? false
-    : user?.role === 'SELLER' || user?.role === 'ADMIN' ? true
+    : user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST') ? true
     : isBuyer && membershipsFetched ? (memberships?.length ?? 0) > 0
     : null
 
@@ -47,7 +47,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     if (isAllowed === false) router.push('/')
   }, [isAllowed])
 
-  const isFarmOwner = user?.role === 'SELLER' || user?.role === 'ADMIN'
+  const isFarmOwner = user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')
   const tabs = [
     ...BASE_TABS.filter((t) => isFarmOwner || t.href !== '/seller/admins'),
     ...(farm?.id ? [{ label: 'ฟาร์มของฉัน', href: '/seller/farm/edit', icon: Store }] : []),

@@ -68,7 +68,7 @@ export default function SellerShippingPage() {
   const { user, isAuthenticated } = useAuthStore()
   const router = useRouter()
   const qc = useQueryClient()
-  const isOwner = user?.role === 'SELLER' || user?.role === 'ADMIN'
+  const isOwner = user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')
 
   useEffect(() => {
     if (!isAuthenticated) router.push('/')

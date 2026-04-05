@@ -88,7 +88,7 @@ export default function Navbar() {
     queryFn: () => api.get('/farms/memberships').then((r) => r.data),
     enabled: isAuthenticated && user?.role === 'BUYER',
   })
-  const isFarmAdmin = user?.role === 'SELLER' || user?.role === 'ADMIN' || (memberships?.length ?? 0) > 0
+  const isFarmAdmin = user?.role === 'SELLER' || user?.role === 'ADMIN' || user?.role === 'HOST' || (memberships?.length ?? 0) > 0
 
   // Close on route change
   useEffect(() => { setOpen(false) }, [pathname])
@@ -148,7 +148,7 @@ export default function Navbar() {
                     <Tractor size={18} /> จัดการฟาร์ม
                   </Link>
                 )}
-                {user?.role === 'ADMIN' && (
+                {(user?.role === 'ADMIN' || user?.role === 'HOST') && (
                   <Link href="/admin/dashboard" className={linkCls}>
                     <LayoutDashboard size={18} /> Admin
                   </Link>
@@ -201,7 +201,7 @@ export default function Navbar() {
               <Avatar name={user?.name} avatar={user?.avatar} size={40} />
               <div className="min-w-0">
                 <p className="font-semibold text-gray-800 truncate">{user?.name}</p>
-                <p className="text-sm text-gray-600">{user?.role === 'BUYER' ? (isFarmAdmin ? 'ผู้ซื้อ · ผู้จัดการฟาร์ม' : 'ผู้ซื้อ') : user?.role === 'SELLER' ? 'ผู้ขาย' : 'แอดมิน'}</p>
+                <p className="text-sm text-gray-600">{user?.role === 'BUYER' ? (isFarmAdmin ? 'ผู้ซื้อ · ผู้จัดการฟาร์ม' : 'ผู้ซื้อ') : user?.role === 'SELLER' ? 'ผู้ขาย' : user?.role === 'HOST' ? 'เจ้าของระบบ' : 'แอดมิน'}</p>
               </div>
             </div>
           )}
@@ -229,7 +229,7 @@ export default function Navbar() {
                   <Tractor size={18} className="text-green-600" /> จัดการฟาร์ม
                 </Link>
               )}
-              {user?.role === 'ADMIN' && (
+              {(user?.role === 'ADMIN' || user?.role === 'HOST') && (
                 <Link href="/admin/dashboard" className={mobileLinkCls} onClick={close}>
                   <LayoutDashboard size={18} className="text-green-600" /> Admin
                 </Link>

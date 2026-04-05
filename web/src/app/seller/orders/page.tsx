@@ -50,7 +50,7 @@ export default function SellerOrdersPage() {
   const [editingTrackingId, setEditingTrackingId] = useState<string | null>(null)
   const [editingTrackingValue, setEditingTrackingValue] = useState('')
 
-  const isSellerOrAdmin = user?.role === 'SELLER' || user?.role === 'ADMIN'
+  const isSellerOrAdmin = user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')
 
   useEffect(() => {
     if (!isAuthenticated) router.push('/')

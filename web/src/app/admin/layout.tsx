@@ -20,10 +20,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
-  if (!isAuthenticated || user?.role !== 'ADMIN') return null
+  if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') return null
 
   return (
     <div className="space-y-6">

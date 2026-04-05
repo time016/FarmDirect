@@ -54,7 +54,7 @@ export default function AdminFarmsPage() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useInfiniteQuery<PageData>({
@@ -70,7 +70,7 @@ export default function AdminFarmsPage() {
       }).then((r) => r.data),
     initialPageParam: 1,
     getNextPageParam: (last) => last.page < last.totalPages ? last.page + 1 : undefined,
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   const farms = data?.pages.flatMap((p) => p.farms) ?? []

@@ -17,7 +17,7 @@ export default function Footer() {
 
   const handleSellerClick = () => {
     if (!isAuthenticated) { openRegister('SELLER'); return }
-    if (user?.role === 'SELLER' || user?.role === 'ADMIN') { router.push('/seller/dashboard'); return }
+    if (user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')) { router.push('/seller/dashboard'); return }
     // BUYER — show confirm
     setConfirm(true)
   }

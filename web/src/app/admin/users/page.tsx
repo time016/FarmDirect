@@ -17,11 +17,12 @@ interface AdminUsersPage {
   totalPages: number
 }
 
-const roleLabel: Record<Role, string> = { BUYER: 'ผู้ซื้อ', SELLER: 'ผู้ขาย', ADMIN: 'แอดมิน' }
+const roleLabel: Record<Role, string> = { BUYER: 'ผู้ซื้อ', SELLER: 'ผู้ขาย', ADMIN: 'แอดมิน', HOST: 'เจ้าของระบบ' }
 const roleColor: Record<Role, string> = {
   BUYER: 'bg-blue-100 text-blue-700',
   SELLER: 'bg-green-100 text-green-700',
   ADMIN: 'bg-purple-100 text-purple-700',
+  HOST: 'bg-yellow-100 text-yellow-700',
 }
 
 export default function AdminUsersPage() {
@@ -33,7 +34,7 @@ export default function AdminUsersPage() {
   const sentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
   const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useInfiniteQuery<AdminUsersPage>({
@@ -44,7 +45,7 @@ export default function AdminUsersPage() {
       }).then((r) => r.data),
     initialPageParam: 1,
     getNextPageParam: (last) => last.page < last.totalPages ? last.page + 1 : undefined,
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   const users: User[] = data?.pages.flatMap((p) => p.users) ?? []

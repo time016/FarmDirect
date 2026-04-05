@@ -12,13 +12,13 @@ export default function AdminDashboardPage() {
   const { data: stats } = useQuery({
     queryKey: ['admin-dashboard'],
     queryFn: () => api.get('/admin/dashboard').then((r) => r.data),
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   const { data: summary } = useQuery({
     queryKey: ['admin-farms-summary', period],
     queryFn: () => api.get('/admin/farms/summary', { params: { period } }).then((r) => r.data),
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   const statCards = [

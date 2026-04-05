@@ -25,13 +25,13 @@ export default function AdminPricingPage() {
   const [vatEnabled, setVatEnabled] = useState(false)
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
   const { data: config, isLoading } = useQuery({
     queryKey: ['admin-pricing'],
     queryFn: () => api.get('/admin/pricing').then((r) => r.data),
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   useEffect(() => {

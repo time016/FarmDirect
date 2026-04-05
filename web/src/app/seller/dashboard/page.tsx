@@ -49,7 +49,7 @@ export default function SellerDashboardPage() {
   const { user, isAuthenticated } = useAuthStore()
   const router = useRouter()
   const qc = useQueryClient()
-  const isSellerOrAdmin = user?.role === 'SELLER' || user?.role === 'ADMIN'
+  const isSellerOrAdmin = user?.role === 'SELLER' || (user?.role === 'ADMIN' || user?.role === 'HOST')
   const [resubmitMessage, setResubmitMessage] = useState('')
   const [showResubmitForm, setShowResubmitForm] = useState(false)
   const [period, setPeriod] = useState<'day' | 'week' | 'month' | 'year'>('week')

@@ -25,13 +25,13 @@ export default function AdminOrdersPage() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'ADMIN') router.push('/')
+    if (!isAuthenticated || user?.role !== 'ADMIN' && user?.role !== 'HOST') router.push('/')
   }, [isAuthenticated, user])
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-orders', statusFilter],
     queryFn: () => api.get('/admin/orders', { params: { status: statusFilter || undefined } }).then((r) => r.data),
-    enabled: isAuthenticated && user?.role === 'ADMIN',
+    enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
   return (
