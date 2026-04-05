@@ -1,7 +1,23 @@
 import { Request, Response } from 'express'
-import jwt, { SignOptions } from 'jsonwebtoken'
 import crypto from 'crypto'
 import prisma from '../config/database'
+import { generateAccessToken } from './auth.controller'
+
+const isProd = process.env.NODE_ENV === 'production'
+const REFRESH_COOKIE_OPTS = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: '/',
+}
+
+async function issueRefreshToken(userId: string, res: Response) {
+  const token = crypto.randomBytes(40).toString('hex')
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  await prisma.refreshToken.create({ data: { token, userId, expiresAt } })
+  res.cookie('refreshToken', token, REFRESH_COOKIE_OPTS)
+}
 
 function createOAuthState(): string {
   const nonce = crypto.randomBytes(16).toString('hex')
@@ -21,11 +37,6 @@ function verifyOAuthState(state: string): boolean {
   const issued = parseInt(ts, 36)
   return Date.now() - issued <= 10 * 60 * 1000
 }
-
-const generateToken = (id: string) =>
-  jwt.sign({ id }, process.env.JWT_SECRET as string, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  } as SignOptions)
 
 const CLIENT_CALLBACK = () => process.env.CLIENT_OAUTH_CALLBACK || 'http://localhost:3000/auth/callback'
 
@@ -123,7 +134,8 @@ export const googleCallback = async (req: Request, res: Response) => {
     })
 
     if (!user.isActive) return redirectError(res, 'account_disabled')
-    res.redirect(`${CLIENT_CALLBACK()}?token=${generateToken(user.id)}`)
+    await issueRefreshToken(user.id, res)
+    res.redirect(`${CLIENT_CALLBACK()}?token=${generateAccessToken(user.id)}`)
   } catch (err: any) {
     redirectError(res, err.message === 'email_exists' ? 'email_exists' : 'google_auth_failed')
   }
@@ -187,7 +199,8 @@ export const lineCallback = async (req: Request, res: Response) => {
     })
 
     if (!user.isActive) return redirectError(res, 'account_disabled')
-    res.redirect(`${CLIENT_CALLBACK()}?token=${generateToken(user.id)}`)
+    await issueRefreshToken(user.id, res)
+    res.redirect(`${CLIENT_CALLBACK()}?token=${generateAccessToken(user.id)}`)
   } catch (err: any) {
     redirectError(res, err.message === 'email_exists' ? 'email_exists' : 'line_auth_failed')
   }

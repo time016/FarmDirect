@@ -10,8 +10,11 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>
   register: (data: RegisterData) => Promise<void>
   loginWithToken: (token: string) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   setUser: (user: User) => void
+  setSession: (user: User, token: string) => void
+  clearSession: () => void
+  initAuth: () => Promise<void>
 }
 
 interface RegisterData {
@@ -47,13 +50,41 @@ export const useAuthStore = create<AuthState>()(
         set({ user: data, token, isAuthenticated: true })
       },
 
-      logout: () => {
+      logout: async () => {
+        await api.post('/auth/logout').catch(() => {})
         localStorage.removeItem('token')
         set({ user: null, token: null, isAuthenticated: false })
       },
 
       setUser: (user) => set({ user }),
+
+      setSession: (user, token) => {
+        localStorage.setItem('token', token)
+        set({ user, token, isAuthenticated: true })
+      },
+
+      clearSession: () => {
+        localStorage.removeItem('token')
+        set({ user: null, token: null, isAuthenticated: false })
+      },
+
+      initAuth: async () => {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+        if (!token) {
+          // No access token — try refresh cookie
+          try {
+            const { data } = await api.post('/auth/refresh')
+            localStorage.setItem('token', data.token)
+            set({ user: data.user, token: data.token, isAuthenticated: true })
+          } catch {
+            set({ user: null, token: null, isAuthenticated: false })
+          }
+        }
+      },
     }),
-    { name: 'auth-store', partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }) }
+    {
+      name: 'auth-store',
+      partialize: (state) => ({ user: state.user, token: state.token, isAuthenticated: state.isAuthenticated }),
+    }
   )
 )

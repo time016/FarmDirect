@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import errorHandler from './middleware/errorHandler'
 import uploadRoutes from './routes/upload.routes'
 import authRoutes from './routes/auth.routes'
@@ -38,6 +39,7 @@ app.use(cors({
   },
   credentials: true,
 }))
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
-import { register, login, getMe, sendVerifyEmail, verifyEmail, forgotPassword, resetPassword, verifyResetCode } from '../controllers/auth.controller'
+import { register, login, refresh, logout, getMe, sendVerifyEmail, verifyEmail, forgotPassword, resetPassword, verifyResetCode } from '../controllers/auth.controller'
 import { googleAuth, googleCallback, lineAuth, lineCallback } from '../controllers/oauth.controller'
 import { authenticate } from '../middleware/auth'
 
@@ -40,6 +40,8 @@ const verifyEmailLimiter = rateLimit({
 
 router.post('/register', registerLimiter, register)
 router.post('/login', loginLimiter, login)
+router.post('/refresh', refresh)
+router.post('/logout', logout)
 router.get('/me', authenticate, getMe)
 router.post('/send-verify-email', authenticate, verifyEmailLimiter, sendVerifyEmail)
 router.post('/verify-email', authenticate, verifyEmail)

@@ -1,13 +1,35 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt, { SignOptions } from 'jsonwebtoken'
+import crypto from 'crypto'
 import prisma from '../config/database'
 import { sendVerificationEmail } from '../utils/email'
 
-const generateToken = (id: string) =>
-  jwt.sign({ id }, process.env.JWT_SECRET as string, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  } as SignOptions)
+const isProd = process.env.NODE_ENV === 'production'
+
+export const generateAccessToken = (id: string) =>
+  jwt.sign({ id }, process.env.JWT_SECRET as string, { expiresIn: '15m' } as SignOptions)
+
+const REFRESH_COOKIE_OPTS = {
+  httpOnly: true,
+  secure: isProd,
+  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+  path: '/',
+}
+
+async function issueRefreshToken(userId: string, res: Response) {
+  const token = crypto.randomBytes(40).toString('hex')
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  await prisma.refreshToken.create({ data: { token, userId, expiresAt } })
+  res.cookie('refreshToken', token, REFRESH_COOKIE_OPTS)
+  return token
+}
+
+const USER_SELECT = {
+  id: true, email: true, name: true, phone: true, avatar: true,
+  role: true, isActive: true, emailVerified: true, createdAt: true,
+}
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,9 +40,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const hashed = await bcrypt.hash(password, 10)
     const user = await prisma.user.create({
       data: { email, password: hashed, name, phone, role: role === 'SELLER' ? 'SELLER' : 'BUYER' },
-      select: { id: true, email: true, name: true, phone: true, avatar: true, role: true, isActive: true, emailVerified: true, createdAt: true },
+      select: USER_SELECT,
     })
-    res.status(201).json({ user, token: generateToken(user.id) })
+    await issueRefreshToken(user.id, res)
+    res.status(201).json({ user, token: generateAccessToken(user.id) })
   } catch (err) {
     next(err)
   }
@@ -36,10 +59,40 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     if (!user.isActive) return res.status(403).json({ message: 'Account is disabled' })
 
     const { password: _, ...userWithoutPassword } = user
-    res.json({ user: userWithoutPassword, token: generateToken(user.id) })
+    await issueRefreshToken(user.id, res)
+    res.json({ user: userWithoutPassword, token: generateAccessToken(user.id) })
   } catch (err) {
     next(err)
   }
+}
+
+export const refresh = async (req: Request, res: Response) => {
+  const token = req.cookies?.refreshToken
+  if (!token) return res.status(401).json({ message: 'No refresh token' })
+
+  const stored = await prisma.refreshToken.findUnique({
+    where: { token },
+    include: { user: { select: USER_SELECT } },
+  })
+  if (!stored || stored.expiresAt < new Date()) {
+    res.clearCookie('refreshToken', REFRESH_COOKIE_OPTS)
+    return res.status(401).json({ message: 'Invalid or expired refresh token' })
+  }
+  if (!stored.user.isActive) return res.status(403).json({ message: 'Account is disabled' })
+
+  // Rotate: delete old, issue new
+  await prisma.refreshToken.delete({ where: { token } })
+  await issueRefreshToken(stored.userId, res)
+  res.json({ user: stored.user, token: generateAccessToken(stored.userId) })
+}
+
+export const logout = async (req: Request, res: Response) => {
+  const token = req.cookies?.refreshToken
+  if (token) {
+    await prisma.refreshToken.deleteMany({ where: { token } }).catch(() => {})
+  }
+  res.clearCookie('refreshToken', REFRESH_COOKIE_OPTS)
+  res.json({ message: 'Logged out' })
 }
 
 export const getMe = async (req: Request, res: Response) => {
@@ -53,7 +106,6 @@ export const sendVerifyEmail = async (req: Request, res: Response, next: NextFun
     if (!user) return res.status(404).json({ message: 'User not found' })
     if (user.emailVerified) return res.status(400).json({ message: 'Email already verified' })
 
-    // Rate limit: don't resend if code still valid and sent < 1 min ago
     if (user.emailVerifyExpiry && user.emailVerifyExpiry.getTime() - Date.now() > 9 * 60 * 1000) {
       return res.status(429).json({ message: 'กรุณารอก่อนขอรหัสใหม่' })
     }
@@ -77,11 +129,10 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
   try {
     const { email } = req.body
     const user = await prisma.user.findUnique({ where: { email } })
-    // Always respond OK to prevent email enumeration
     if (!user || !user.isActive) return res.json({ message: 'sent' })
 
     const code = Math.floor(100000 + Math.random() * 900000).toString()
-    const expiry = new Date(Date.now() + 15 * 60 * 1000) // 15 min
+    const expiry = new Date(Date.now() + 15 * 60 * 1000)
 
     await prisma.user.update({
       where: { id: user.id },
@@ -149,7 +200,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     const updated = await prisma.user.update({
       where: { id: req.user.id },
       data: { emailVerified: true, emailVerifyCode: null, emailVerifyExpiry: null },
-      select: { id: true, email: true, name: true, phone: true, avatar: true, role: true, isActive: true, emailVerified: true, createdAt: true },
+      select: USER_SELECT,
     })
     res.json(updated)
   } catch (err) {
