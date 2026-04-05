@@ -58,6 +58,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
   const [codeSent, setCodeSent] = useState(false)
   const [verifyCode, setVerifyCode] = useState('')
   const [verifying, setVerifying] = useState(false)
+  const [showVerify, setShowVerify] = useState(false)
 
   const profileNameInvalid = profileSubmitted && !form.name.trim()
   const profilePhoneInvalid = profileSubmitted && !!form.phone && !/^0[0-9]{8,9}$/.test(form.phone.replace(/[-\s]/g, ''))
@@ -255,7 +256,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
         {(['profile', 'addresses', 'farms'] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`relative px-6 py-3 text-base font-medium border-b-2 transition ${tab === t ? 'border-green-600 text-green-600' : 'border-transparent text-gray-600'}`}>
-            {t === 'profile' ? 'ข้อมูลส่วนตัว' : t === 'addresses' ? 'ที่อยู่สำหรับจัดส่ง' : 'ผู้จัดการฟาร์ม'}
+            {t === 'profile' ? 'ข้อมูลส่วนตัว' : t === 'addresses' ? 'ที่อยู่จัดส่ง' : 'ผู้จัดการฟาร์ม'}
             {t === 'farms' && invitations.length > 0 && (
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
             )}
@@ -308,12 +309,17 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
               {/* Email not verified banner */}
               {!user?.emailVerified && (
                 <div className="mt-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 space-y-3">
-                  <div className="flex items-start gap-2">
-                    <ShieldAlert size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-amber-700">อีเมลของคุณยังไม่ได้รับการยืนยัน</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ShieldAlert size={16} className="text-amber-500 flex-shrink-0" />
+                      <p className="text-sm text-amber-700">อีเมลของคุณยังไม่ได้รับการยืนยัน</p>
+                    </div>
+                    <button onClick={() => setShowVerify(v => !v)} className="text-sm text-amber-600 hover:underline">
+                      {showVerify ? 'ซ่อน' : 'ยืนยันเลย'}
+                    </button>
                   </div>
 
-                  {!codeSent ? (
+                  {showVerify && (!codeSent ? (
                     <button onClick={handleSendVerifyCode} disabled={sendingCode}
                       className="flex items-center gap-2 text-sm bg-amber-500 text-white px-4 py-2 rounded-lg hover:bg-amber-600 transition disabled:opacity-50">
                       <Mail size={14} />
@@ -322,22 +328,22 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                   ) : (
                     <div className="space-y-2">
                       <p className="text-sm text-amber-600">กรอกรหัส 6 หลักที่ส่งไปที่ {user?.email}</p>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={verifyCode}
+                        onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, ''))}
+                        placeholder="000000"
+                        className="w-full border border-amber-300 rounded-lg px-3 py-2 text-base font-mono tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-amber-400"
+                      />
                       <div className="flex gap-2">
-                        <input
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={6}
-                          value={verifyCode}
-                          onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, ''))}
-                          placeholder="000000"
-                          className="w-32 border border-amber-300 rounded-lg px-3 py-2 text-base font-mono tracking-widest text-center focus:outline-none focus:ring-2 focus:ring-amber-400"
-                        />
                         <button onClick={handleVerifyEmail} disabled={verifying || verifyCode.length < 6}
-                          className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50">
+                          className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700 transition disabled:opacity-50">
                           {verifying ? 'กำลังตรวจสอบ...' : 'ยืนยัน'}
                         </button>
                         <button onClick={() => { setCodeSent(false); setVerifyCode('') }}
-                          className="px-3 py-2 rounded-lg text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
+                          className="px-4 py-2 rounded-lg text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
                           ยกเลิก
                         </button>
                       </div>
@@ -346,7 +352,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                         {sendingCode ? 'กำลังส่งใหม่...' : 'ส่งรหัสใหม่อีกครั้ง'}
                       </button>
                     </div>
-                  )}
+                  ))}
                 </div>
               )}
 
@@ -423,7 +429,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
           {showForm && (
             <div className="bg-white rounded-xl p-5 border border-green-200">
               <h3 className="font-semibold text-gray-800 mb-4">{editId ? 'แก้ไขที่อยู่' : 'เพิ่มที่อยู่ใหม่'}</h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                 {/* ชื่อผู้รับ + เบอร์โทร */}
                 {[{ label: 'ชื่อผู้รับ', key: 'recipient' }, { label: 'เบอร์โทร', key: 'phone' }].map((f) => (
@@ -437,7 +443,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                 ))}
 
                 {/* ที่อยู่ */}
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                   <label className="text-sm text-gray-600 mb-1 block">ที่อยู่ <span className="text-red-500">*</span></label>
                   <input value={addrForm.address} onChange={(e) => setAddrForm({ ...addrForm, address: e.target.value })}
                     className={inputCls(fieldInvalid('address'))} />
@@ -445,7 +451,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                 </div>
 
                 {/* จังหวัด */}
-                <div className="col-span-2">
+                <div>
                   <label className="text-sm text-gray-600 mb-1 block">จังหวัด <span className="text-red-500">*</span></label>
                   <select value={addrForm.province} onChange={(e) => handleProvinceChange(e.target.value)} className={selectCls(fieldInvalid('province'))}>
                     <option value="">-- เลือกจังหวัด --</option>
@@ -479,14 +485,14 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                 </div>
 
                 {/* รหัสไปรษณีย์ */}
-                <div className="col-span-2">
+                <div>
                   <label className="text-sm text-gray-600 mb-1 block">รหัสไปรษณีย์ <span className="text-red-500">*</span></label>
                   <input value={addrForm.zipCode} readOnly placeholder="กรอกอัตโนมัติเมื่อเลือกตำบล"
                     className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 text-gray-600 cursor-not-allowed" />
                 </div>
 
                 {/* Default */}
-                <div className="col-span-2 flex items-center gap-2">
+                <div className="col-span-1 md:col-span-2 flex items-center gap-2">
                   <input type="checkbox" id="isDefault" checked={addrForm.isDefault}
                     onChange={(e) => setAddrForm({ ...addrForm, isDefault: e.target.checked })}
                     className="accent-green-600" />
