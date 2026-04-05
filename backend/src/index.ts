@@ -1,7 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import path from 'path'
 import errorHandler from './middleware/errorHandler'
 import uploadRoutes from './routes/upload.routes'
 import authRoutes from './routes/auth.routes'
@@ -41,9 +40,6 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 // Routes
 app.use('/api/upload', uploadRoutes)
