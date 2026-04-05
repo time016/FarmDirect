@@ -370,7 +370,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
             </div>
             <div>
               <label className="text-base text-gray-600 mb-1.5 block font-medium">เบอร์โทรศัพท์</label>
-              <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 placeholder="0812345678"
                 className={`w-full border rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 transition ${profilePhoneInvalid ? 'border-red-400 focus:ring-red-400 bg-red-50' : 'border-gray-300 focus:ring-green-500'}`} />
               {profilePhoneInvalid && <p className="text-red-500 text-sm mt-0.5">รูปแบบเบอร์โทรไม่ถูกต้อง (ตัวอย่าง: 0812345678)</p>}
@@ -432,10 +432,10 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
                 {/* ชื่อผู้รับ + เบอร์โทร */}
-                {[{ label: 'ชื่อผู้รับ', key: 'recipient' }, { label: 'เบอร์โทร', key: 'phone' }].map((f) => (
+                {[{ label: 'ชื่อผู้รับ', key: 'recipient', type: 'text' }, { label: 'เบอร์โทร', key: 'phone', type: 'tel' }].map((f) => (
                   <div key={f.key}>
                     <label className="text-sm text-gray-600 mb-1 block">{f.label} <span className="text-red-500">*</span></label>
-                    <input value={addrForm[f.key as keyof typeof emptyAddr] as string}
+                    <input type={f.type} value={addrForm[f.key as keyof typeof emptyAddr] as string}
                       onChange={(e) => setAddrForm({ ...addrForm, [f.key]: e.target.value })}
                       className={inputCls(fieldInvalid(f.key))} />
                     {fieldInvalid(f.key) && <p className="text-red-500 text-sm mt-0.5">กรุณากรอก{f.label}</p>}
