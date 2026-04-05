@@ -73,7 +73,9 @@ export default function FarmDetailPage() {
     enabled: isOwner,
   })
 
-  const products: Product[] = isOwner ? (myFarm?.products ?? []) : (farm?.products ?? [])
+  const farmRef = farm ? { id: farm.id, slug: farm.slug, name: farm.name, province: farm.province } : undefined
+  const rawProducts: Product[] = isOwner ? (myFarm?.products ?? []) : (farm?.products ?? [])
+  const products: Product[] = rawProducts.map((p) => ({ ...p, farm: p.farm ?? farmRef }))
 
   const { data: categories } = useQuery<Category[]>({
     queryKey: ['categories'],
