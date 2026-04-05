@@ -12,6 +12,6 @@ export async function notifyMany(userIds: string[], type: string, title: string,
 }
 
 export async function notifyAllAdmins(type: string, title: string, body: string, link?: string) {
-  const admins = await prisma.user.findMany({ where: { role: 'ADMIN', isActive: true }, select: { id: true } })
+  const admins = await prisma.user.findMany({ where: { role: { in: ['ADMIN', 'HOST'] }, isActive: true }, select: { id: true } })
   return notifyMany(admins.map((a) => a.id), type, title, body, link)
 }
