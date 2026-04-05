@@ -130,10 +130,7 @@ export default function AdminFarmsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-extrabold text-gray-600">จัดการฟาร์ม</h1>
-            <span className="text-sm text-gray-600">ทั้งหมด {total} ฟาร์ม</span>
-          </div>
+      <h1 className="text-2xl font-extrabold text-gray-600">จัดการฟาร์ม</h1>
 
           {/* Search */}
           <form onSubmit={handleSearch} className="flex gap-2">

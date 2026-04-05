@@ -32,14 +32,14 @@ export default function AdminDashboardPage() {
     <div className="space-y-8">
       {/* Order summary */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">ภาพรวมคำสั่งซื้อ</p>
           <div className="flex gap-1">
             {(['day', 'week', 'month', 'year'] as const).map((p) => {
               const label = { day: 'วันนี้', week: 'สัปดาห์นี้', month: 'เดือนนี้', year: 'ปีนี้' }[p]
               return (
                 <button key={p} onClick={() => setPeriod(p)}
-                  className={`px-3 py-1 rounded-lg text-sm font-medium transition ${period === p ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
+                  className={`flex-1 sm:flex-none px-3 py-1 rounded-lg text-sm font-medium transition ${period === p ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
                   {label}
                 </button>
               )

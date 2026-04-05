@@ -165,12 +165,14 @@ export const getAllOrders = async (req: Request, res: Response, next: NextFuncti
     const page = Number(req.query.page) || 1
     const limit = Number(req.query.limit) || 20
     const where = { ...(status && { status }) }
-    const [orders, total] = await Promise.all([
+    const statuses = ['PENDING', 'PAID', 'CONFIRMED', 'SHIPPING', 'DELIVERED', 'CANCELLED'] as const
+    const [orders, total, all, ...statusCountsArr] = await Promise.all([
       prisma.order.findMany({
         where,
         include: {
           user: { select: { name: true, email: true } },
-          items: { include: { product: { select: { name: true } } } },
+          items: { include: { product: { select: { name: true, unit: true } } } },
+          address: true,
           payment: true,
         },
         skip: (page - 1) * limit,
@@ -178,8 +180,11 @@ export const getAllOrders = async (req: Request, res: Response, next: NextFuncti
         orderBy: { createdAt: 'desc' },
       }),
       prisma.order.count({ where }),
+      prisma.order.count(),
+      ...statuses.map((s) => prisma.order.count({ where: { status: s } })),
     ])
-    res.json({ orders, total })
+    const statusCounts = { all, ...Object.fromEntries(statuses.map((s, i) => [s, statusCountsArr[i]])) }
+    res.json({ orders, total, statusCounts })
   } catch (err) {
     next(err)
   }

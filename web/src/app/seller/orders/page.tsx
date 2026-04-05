@@ -120,21 +120,26 @@ export default function SellerOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-600">จัดการคำสั่งซื้อ</h1>
-        <span className="text-sm text-gray-600">ทั้งหมด {total} รายการ</span>
-      </div>
+      <h1 className="text-2xl font-bold text-gray-600">จัดการคำสั่งซื้อ</h1>
 
       {/* Filter */}
       <div className="flex gap-2 flex-wrap">
-        {(['', 'PENDING', 'PAID', 'CONFIRMED', 'SHIPPING', 'DELIVERED', 'CANCELLED'] as const).map((s) => {
+        {([
+          { key: '', badge: 'bg-gray-100 text-gray-600' },
+          { key: 'PENDING', badge: 'bg-orange-100 text-orange-600' },
+          { key: 'PAID', badge: 'bg-blue-100 text-blue-600' },
+          { key: 'CONFIRMED', badge: 'bg-indigo-100 text-indigo-600' },
+          { key: 'SHIPPING', badge: 'bg-amber-100 text-amber-600' },
+          { key: 'DELIVERED', badge: 'bg-green-100 text-green-600' },
+          { key: 'CANCELLED', badge: 'bg-red-100 text-red-600' },
+        ] as const).map(({ key: s, badge }) => {
           const count = s === '' ? total : (statusCounts?.[s] ?? 0)
           const active = statusFilter === s
           return (
             <button key={s} onClick={() => setStatusFilter(s)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition ${active ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-green-400'}`}>
               {s === '' ? 'ทั้งหมด' : statusLabel[s]}
-              <span className={`text-sm px-1.5 py-0.5 rounded-full font-semibold ${active ? 'bg-white/25 text-white' : 'bg-gray-100 text-gray-600'}`}>
+              <span className={`text-sm px-1.5 py-0.5 rounded-full font-semibold ${active ? 'bg-white/25 text-white' : badge}`}>
                 {count}
               </span>
             </button>

@@ -18,6 +18,16 @@ const statusColor: Record<OrderStatus, string> = {
   DELIVERED: 'bg-green-100 text-green-700', CANCELLED: 'bg-red-100 text-red-600',
 }
 
+const filterTabs = [
+  { key: '', label: 'ทั้งหมด', badge: 'bg-gray-100 text-gray-600' },
+  { key: 'PENDING', label: 'รอชำระเงิน', badge: 'bg-orange-100 text-orange-600' },
+  { key: 'PAID', label: 'ชำระแล้ว', badge: 'bg-blue-100 text-blue-600' },
+  { key: 'CONFIRMED', label: 'กำลังเตรียมสินค้า', badge: 'bg-indigo-100 text-indigo-600' },
+  { key: 'SHIPPING', label: 'จัดส่งแล้ว', badge: 'bg-amber-100 text-amber-600' },
+  { key: 'DELIVERED', label: 'ส่งมอบแล้ว', badge: 'bg-green-100 text-green-600' },
+  { key: 'CANCELLED', label: 'ยกเลิก', badge: 'bg-red-100 text-red-600' },
+]
+
 export default function AdminOrdersPage() {
   const { isAuthenticated, user } = useAuthStore()
   const router = useRouter()
@@ -34,21 +44,27 @@ export default function AdminOrdersPage() {
     enabled: isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'HOST'),
   })
 
+  const statusCounts = data?.statusCounts
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-extrabold text-gray-600">คำสั่งซื้อทั้งหมด</h1>
-        <span className="text-sm text-gray-600">ทั้งหมด {data?.total ?? 0} รายการ</span>
-      </div>
+      <h1 className="text-2xl font-extrabold text-gray-600">คำสั่งซื้อทั้งหมด</h1>
 
-      {/* Filter */}
+      {/* Filter Tabs with badge */}
       <div className="flex gap-2 flex-wrap">
-        {(['', 'PENDING', 'PAID', 'CONFIRMED', 'SHIPPING', 'DELIVERED', 'CANCELLED'] as const).map((s) => (
-          <button key={s} onClick={() => setStatusFilter(s)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${statusFilter === s ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-green-400'}`}>
-            {s === '' ? 'ทั้งหมด' : statusLabel[s]}
-          </button>
-        ))}
+        {filterTabs.map((tab) => {
+          const count = statusCounts ? (tab.key === '' ? statusCounts.all : statusCounts[tab.key] ?? 0) : 0
+          const active = statusFilter === tab.key
+          return (
+            <button key={tab.key} onClick={() => setStatusFilter(tab.key)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition ${active ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-600 hover:border-green-400'}`}>
+              {tab.label}
+              <span className={`text-sm px-1.5 py-0.5 rounded-full font-semibold ${active ? 'bg-white/25 text-white' : tab.badge}`}>
+                {count}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       {/* Orders */}

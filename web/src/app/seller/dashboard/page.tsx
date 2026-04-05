@@ -170,14 +170,14 @@ export default function SellerDashboardPage() {
       {/* Summary Stats */}
       {farm && (
         <div className="bg-white rounded-xl border border-gray-100 p-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-2 mb-4">
             <p className="text-sm font-semibold text-gray-700">ภาพรวมยอดขาย</p>
             <div className="flex gap-1">
               {(['day', 'week', 'month', 'year'] as const).map((p) => {
-                const label = { day: 'วันนี้', week: 'สัปดาห์', month: 'เดือน', year: 'ปี' }[p]
+                const label = { day: 'วันนี้', week: 'สัปดาห์นี้', month: 'เดือนนี้', year: 'ปีนี้' }[p]
                 return (
                   <button key={p} onClick={() => setPeriod(p)}
-                    className={`px-2.5 py-1 rounded-lg text-sm font-medium transition ${period === p ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+                    className={`flex-1 px-2.5 py-1 rounded-lg text-sm font-medium transition ${period === p ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
                     {label}
                   </button>
                 )
