@@ -109,7 +109,7 @@ export default function NotificationBell({ onOpen }: { onOpen?: () => void } = {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+        <div className="fixed inset-x-0 top-[56px] mx-2 md:absolute md:inset-x-auto md:right-0 md:top-full md:mt-2 md:mx-0 md:w-80 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <span className="font-semibold text-gray-700 text-sm">การแจ้งเตือน</span>
