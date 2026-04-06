@@ -7,6 +7,7 @@ import { useCartStore } from '@/store/cartStore'
 import { ShoppingCart, ShoppingBag, LogOut, LogIn, LayoutDashboard, Tractor, ClipboardList, Leaf, Menu, X, Sun, Moon, Monitor } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
+import Image from 'next/image'
 import { useAuthModalStore } from '@/store/authModalStore'
 import { useTheme } from 'next-themes'
 import NotificationBell from './NotificationBell'
@@ -63,11 +64,11 @@ function ThemeToggleMobile() {
 function Avatar({ name, avatar, size = 32 }: { name?: string; avatar?: string; size?: number }) {
   return (
     <div
-      className="rounded-full overflow-hidden bg-green-500 flex items-center justify-center flex-shrink-0"
+      className="relative rounded-full overflow-hidden bg-green-500 flex items-center justify-center flex-shrink-0"
       style={{ width: size, height: size }}
     >
       {avatar
-        ? <img src={avatar} alt={name} className="w-full h-full object-cover" />
+        ? <Image src={avatar} alt={name} fill sizes="80px" className="object-cover" />
         : <span className="text-white font-bold" style={{ fontSize: size * 0.4 }}>{name?.[0]?.toUpperCase()}</span>
       }
     </div>

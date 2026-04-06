@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import { useAuthModalStore } from '@/store/authModalStore'
@@ -52,10 +53,12 @@ function FarmOrderCard({ entry }: { entry: FarmEntry }) {
         className="hidden sm:block w-24 md:w-28 flex-shrink-0 self-stretch relative bg-gray-200 hover:brightness-90 transition"
       >
         {(previewImages[0]?.product.images as string[])?.[0] ? (
-          <img
+          <Image
             src={(previewImages[0].product.images as string[])[0]}
             alt={previewImages[0].product.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            sizes="(max-width:640px) 0px, 112px"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-2xl">🌿</div>
@@ -71,9 +74,9 @@ function FarmOrderCard({ entry }: { entry: FarmEntry }) {
       <div className="flex sm:hidden flex-col justify-center pl-3 py-3 gap-1 flex-shrink-0">
         {previewImages.map((item) => (
           <Link key={item.id} href={`/products/${(item.product as { id?: string }).id ?? ''}`}
-            className="w-10 h-10 rounded-lg overflow-hidden bg-gray-200 border-2 border-white flex-shrink-0 block hover:brightness-90 transition">
+            className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-200 border-2 border-white flex-shrink-0 block hover:brightness-90 transition">
             {(item.product.images as string[])?.[0] ? (
-              <img src={(item.product.images as string[])[0]} alt={item.product.name} className="w-full h-full object-cover" />
+              <Image src={(item.product.images as string[])[0]} alt={item.product.name} fill sizes="40px" className="object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-sm">🌿</div>
             )}

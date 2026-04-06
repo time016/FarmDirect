@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import api from '@/lib/api'
 import { OrderStatus } from '@/types'
 import { MapPin, CreditCard, Store, Truck, Copy, Check } from 'lucide-react'
@@ -260,9 +261,9 @@ export default function OrderDetailPage() {
               {group.items.map((item) => (
                 <div key={item.id} className="flex gap-3 items-center px-5 py-4">
                   <Link href={`/products/${item.product.id}`}
-                    className="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 hover:opacity-90 transition block">
+                    className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 hover:opacity-90 transition block">
                     {item.product.images?.[0] ? (
-                      <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                      <Image src={item.product.images[0]} alt={item.product.name} fill sizes="56px" className="object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xl">🌿</div>
                     )}

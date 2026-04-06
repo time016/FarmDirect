@@ -6,6 +6,8 @@ import { useAuthModalStore } from '@/store/authModalStore'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import api from '@/lib/api'
+import Image from 'next/image'
+
 import { Address } from '@/types'
 import { Plus, Trash2, Pencil, Camera, Store, Check, X, ShieldCheck, ShieldAlert, Mail, Tractor } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -273,7 +275,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                 {avatarUploading ? (
                   <div className="w-7 h-7 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
                 ) : user?.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  <Image src={user.avatar} alt={user.name} fill sizes="200px" className="object-cover" />
                 ) : (
                   <span className="text-green-700 text-3xl font-bold">{user?.name?.[0]?.toUpperCase()}</span>
                 )}
@@ -543,7 +545,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                   <div key={inv.id} className="flex items-center gap-3 px-5 py-4">
                     <div className="w-12 h-12 rounded-xl overflow-hidden bg-green-100 flex-shrink-0 flex items-center justify-center text-2xl">
                       {inv.farm.image
-                        ? <img src={inv.farm.image} alt={inv.farm.name} className="w-full h-full object-cover" />
+                        ? <Image src={inv.farm.image} alt={inv.farm.name} fill sizes="80px" className="object-cover" />
                         : '🌾'}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -596,7 +598,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
                   <div key={m.id} className="flex items-center gap-3 px-5 py-4">
                     <div className="w-12 h-12 rounded-xl overflow-hidden bg-green-100 flex-shrink-0 flex items-center justify-center text-2xl">
                       {m.farm.image
-                        ? <img src={m.farm.image} alt={m.farm.name} className="w-full h-full object-cover" />
+                        ? <Image src={m.farm.image} alt={m.farm.name} fill sizes="80px" className="object-cover" />
                         : '🌾'}
                     </div>
                     <div className="flex-1 min-w-0">

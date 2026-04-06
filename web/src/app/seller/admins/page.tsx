@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
+import Image from 'next/image'
 import { Search, UserPlus, Trash2, Users, Crown } from 'lucide-react'
 
 interface FarmAdminUser {
@@ -91,9 +92,9 @@ export default function SellerAdminsPage() {
               const isAdmin = alreadyAdminIds.has(u.id)
               return (
                 <div key={u.id} className="flex items-center gap-3 px-4 py-3 bg-white hover:bg-gray-50">
-                  <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold flex-shrink-0 overflow-hidden">
+                  <div className="relative w-9 h-9 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold flex-shrink-0 overflow-hidden">
                     {u.avatar ? (
-                      <img src={u.avatar} alt={u.name} className="w-full h-full object-cover" />
+                      <Image src={u.avatar} alt={u.name} fill sizes="36px" className="object-cover" />
                     ) : (
                       u.name[0]?.toUpperCase()
                     )}
@@ -152,9 +153,9 @@ export default function SellerAdminsPage() {
           <div className="divide-y divide-gray-50">
             {admins.map((a) => (
               <div key={a.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50">
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold flex-shrink-0 overflow-hidden">
+                <div className="relative w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-semibold flex-shrink-0 overflow-hidden">
                   {a.user.avatar ? (
-                    <img src={a.user.avatar} alt={a.user.name} className="w-full h-full object-cover" />
+                    <Image src={a.user.avatar} alt={a.user.name} fill sizes="40px" className="object-cover" />
                   ) : (
                     a.user.name[0]?.toUpperCase()
                   )}

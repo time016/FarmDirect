@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
@@ -16,9 +17,9 @@ function RecentProductCard({ product }: { product: { id: string; name: string; i
   return (
     <Link href={`/products/${product.id}`} className="flex-shrink-0 w-28 group">
       <div className="bg-white rounded-xl border border-gray-100 overflow-hidden group-hover:shadow-md transition">
-        <div className="w-full aspect-square bg-gray-100">
+        <div className="relative w-full aspect-square bg-gray-100">
           {image ? (
-            <img src={image} alt={product.name} className="w-full h-full object-cover" />
+            <Image src={image} alt={product.name} fill sizes="112px" className="object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-2xl">🌿</div>
           )}
@@ -202,9 +203,9 @@ export default function CartPage() {
             <div key={item.id} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
               <div className="p-4 flex gap-4">
                 <Link href={`/products/${item.product.id}`}
-                  className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 block hover:opacity-90 transition">
+                  className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 block hover:opacity-90 transition">
                   {item.product.images[0] ? (
-                    <img src={item.product.images[0]} alt={item.product.name} className="w-full h-full object-cover" />
+                    <Image src={item.product.images[0]} alt={item.product.name} fill sizes="80px" className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl">🌿</div>
                   )}

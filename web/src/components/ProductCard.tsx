@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ShoppingCart, Star } from 'lucide-react'
 
 function avgRating(reviews?: { rating: number }[]) {
@@ -49,7 +50,7 @@ export default function ProductCard({ product }: Props) {
       <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden border border-gray-100">
         <div className="relative h-48 bg-gray-100">
           {product.images[0] ? (
-            <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+            <Image src={product.images[0]} alt={product.name} fill sizes="(max-width:640px) 50vw, (max-width:1024px) 33vw, 25vw" className="object-cover" />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-5xl">🌿</div>
           )}

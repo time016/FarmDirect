@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams, useRouter } from 'next/navigation'
 import api from '@/lib/api'
+import Image from 'next/image'
+
 import ProductCard from '@/components/ProductCard'
 import ImageUpload from '@/components/ImageUpload'
 import { useAuthStore } from '@/store/authStore'
@@ -452,7 +454,7 @@ export default function FarmDetailPage() {
                 <div className="flex flex-wrap gap-3">
                   {productForm.images.map((img, i) => (
                     <div key={i} className="relative w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
-                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      <Image src={img} alt="" fill sizes="(max-width:768px) 100vw, 800px" className="object-cover" />
                       <button onClick={() => setProductForm({ ...productForm, images: productForm.images.filter((_, idx) => idx !== i) })}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
                         <X size={10} />
@@ -617,7 +619,7 @@ export default function FarmDetailPage() {
                 {/* Avatar */}
                 <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
                   {review.user.avatar
-                    ? <img src={review.user.avatar} alt={review.user.name} className="w-full h-full object-cover" />
+                    ? <Image src={review.user.avatar} alt={review.user.name} fill sizes="40px" className="object-cover" />
                     : review.user.name?.[0]?.toUpperCase()}
                 </div>
 

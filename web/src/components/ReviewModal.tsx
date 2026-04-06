@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import { Star, X } from 'lucide-react'
 
 interface ReviewItem {
@@ -91,9 +92,9 @@ export default function ReviewModal({ open, items, isLoading = false, onConfirm,
               <div key={item.productId} className="space-y-3">
                 {/* Product info */}
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                     {item.productImage
-                      ? <img src={item.productImage} alt={item.productName} className="w-full h-full object-cover" />
+                      ? <Image src={item.productImage} alt={item.productName} fill sizes="48px" className="object-cover" />
                       : <div className="w-full h-full flex items-center justify-center text-xl">🌿</div>
                     }
                   </div>

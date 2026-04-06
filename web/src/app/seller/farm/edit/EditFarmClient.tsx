@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/authStore'
 import api from '@/lib/api'
 import toast from 'react-hot-toast'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Plus, Trash2, Play, Globe, Video, ExternalLink, CircleAlert, RefreshCw, AlertTriangle } from 'lucide-react'
 
 interface SubdistrictOption { name_th: string; postal_code: number }
@@ -261,7 +262,7 @@ export default function EditFarmClient({ provinces }: { provinces: ProvinceOptio
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
           {form.images.map((url, idx) => (
             <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-              <img src={url} alt={`farm-${idx}`} className="w-full h-full object-cover" />
+              <Image src={url} alt={`farm-${idx}`} fill sizes="(max-width:640px) 33vw, 20vw" className="object-cover" />
               {idx === 0 && (
                 <span className="absolute top-1 left-1 bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">หน้าปก</span>
               )}

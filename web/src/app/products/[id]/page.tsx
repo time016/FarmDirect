@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import api from '@/lib/api'
 import { useCartStore } from '@/store/cartStore'
@@ -86,10 +87,12 @@ export default function ProductDetailPage() {
               <div className="w-full h-full flex items-center justify-center text-7xl">🌿</div>
             ) : mediaItems[slideIndex]?.type === 'image' ? (
               <>
-                <img
+                <Image
                   src={mediaItems[slideIndex].url}
                   alt={product.name}
-                  className="w-full h-full object-cover cursor-zoom-in"
+                  fill
+                  sizes="(max-width:768px) 100vw, 50vw"
+                  className="object-cover cursor-zoom-in"
                   onClick={() => setViewerOpen(true)}
                 />
                 <button onClick={() => setViewerOpen(true)}
@@ -133,13 +136,13 @@ export default function ProductDetailPage() {
             <div className="flex gap-2 flex-wrap">
               {mediaItems.map((item, i) => (
                 <button key={i} onClick={() => setSlideIndex(i)}
-                  className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition flex-shrink-0 bg-gray-100 ${i === slideIndex ? 'border-green-500' : 'border-transparent hover:border-gray-300'}`}>
+                  className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition flex-shrink-0 bg-gray-100 ${i === slideIndex ? 'border-green-500' : 'border-transparent hover:border-gray-300'}`}>
                   {item.type === 'image' ? (
-                    <img src={item.url} alt="" className="w-full h-full object-cover" />
+                    <Image src={item.url} alt="" fill sizes="64px" className="object-cover" />
                   ) : (
                     <div className="w-full h-full relative">
                       {getVideoThumb(item.url) ? (
-                        <img src={getVideoThumb(item.url)!} alt="" className="w-full h-full object-cover" />
+                        <Image src={getVideoThumb(item.url)!} alt="" fill sizes="64px" className="object-cover" />
                       ) : (
                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                           <Play size={20} className="text-gray-600" />
@@ -209,9 +212,9 @@ export default function ProductDetailPage() {
               <div key={r.id} className="bg-white rounded-xl p-4 border border-gray-100">
                 <div className="flex items-center gap-3 mb-2">
                   {/* Avatar */}
-                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  <div className="relative w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {r.user?.avatar
-                      ? <img src={r.user.avatar} alt={r.user.name} className="w-full h-full object-cover" />
+                      ? <Image src={r.user.avatar} alt={r.user.name} fill sizes="32px" className="object-cover" />
                       : <span className="text-green-700 text-sm font-bold">{r.user?.name?.[0]?.toUpperCase()}</span>
                     }
                   </div>

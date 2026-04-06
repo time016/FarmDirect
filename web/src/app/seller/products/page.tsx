@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import api from '@/lib/api'
@@ -55,9 +56,9 @@ export default function SellerProductsPage() {
             {farm.products?.map((p: Product) => (
               <div key={p.id} className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex items-center gap-3">
                 {/* Image */}
-                <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                   {(p.images as string[])?.[0] ? (
-                    <img src={(p.images as string[])[0]} alt={p.name} className="w-full h-full object-cover" />
+                    <Image src={(p.images as string[])[0]} alt={p.name} fill sizes="48px" className="object-cover" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-xl">🌿</div>
                   )}
@@ -104,9 +105,9 @@ export default function SellerProductsPage() {
                   <tr key={p.id} className="hover:bg-gray-50 transition">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                           {(p.images as string[])?.[0] ? (
-                            <img src={(p.images as string[])[0]} alt={p.name} className="w-full h-full object-cover" />
+                            <Image src={(p.images as string[])[0]} alt={p.name} fill sizes="40px" className="object-cover" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-lg">🌿</div>
                           )}
