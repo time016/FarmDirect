@@ -1,17 +1,13 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 const BRAND = '#16a34a'
 const BRAND_DARK = '#15803d'
 const CLIENT_URL = () => process.env.CLIENT_URL || 'http://localhost:3000'
+const FROM = process.env.RESEND_FROM || 'FarmDirect <onboarding@resend.dev>'
 
-function createTransporter() {
-  if (!process.env.SMTP_HOST) return null
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  })
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null
+  return new Resend(process.env.RESEND_API_KEY)
 }
 
 // ─── Icon map for notification types ─────────────────────────────────────────
@@ -19,9 +15,9 @@ const TYPE_META: Record<string, { icon: string; color: string; label: string }> 
   ORDER_PLACED:    { icon: '🛒', color: '#2563eb', label: 'ออเดอร์ใหม่' },
   ORDER_CONFIRMED: { icon: '✅', color: '#7c3aed', label: 'ยืนยันออเดอร์' },
   ORDER_SHIPPING:  { icon: '🚚', color: '#d97706', label: 'กำลังจัดส่ง' },
-  ORDER_DELIVERED: { icon: '#16a34a', color: '#16a34a', label: 'จัดส่งสำเร็จ' },
+  ORDER_DELIVERED: { icon: '✅', color: '#16a34a', label: 'จัดส่งสำเร็จ' },
   ORDER_CANCELLED: { icon: '❌', color: '#dc2626', label: 'ยกเลิกออเดอร์' },
-  DEFAULT:         { icon: '🔔', color: BRAND, label: 'แจ้งเตือน' },
+  DEFAULT:         { icon: '🔔', color: BRAND,     label: 'แจ้งเตือน' },
 }
 
 function getMeta(type?: string) {
@@ -38,16 +34,13 @@ function layout(inner: string) {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 16px">
     <tr><td align="center">
       <table width="100%" style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
-        <!-- Header -->
         <tr>
           <td style="background:linear-gradient(135deg,${BRAND} 0%,${BRAND_DARK} 100%);padding:28px 32px">
             <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.3px">🌾 FarmDirect</p>
             <p style="margin:4px 0 0;font-size:13px;color:#bbf7d0">สินค้าเกษตรจากฟาร์มสู่มือคุณ</p>
           </td>
         </tr>
-        <!-- Body -->
         ${inner}
-        <!-- Footer -->
         <tr>
           <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #e5e7eb">
             <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;line-height:1.6">
@@ -80,15 +73,11 @@ function notificationTemplate(title: string, body: string, link?: string, type?:
   const inner = `
     <tr>
       <td style="padding:32px 32px 8px">
-        <!-- Badge -->
         <span style="display:inline-block;background:${meta.color}1a;color:${meta.color};font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:16px">
           ${meta.icon}&nbsp;&nbsp;${meta.label}
         </span>
-        <!-- Title -->
         <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#111827;line-height:1.3">${title}</h2>
-        <!-- Divider -->
         <div style="height:3px;width:48px;background:${BRAND};border-radius:2px;margin-bottom:20px"></div>
-        <!-- Body -->
         <p style="margin:0;font-size:15px;color:#374151;line-height:1.7">${body}</p>
         ${btn}
       </td>
@@ -106,7 +95,6 @@ function verificationTemplate(title: string, code: string, expiry: string) {
         <h2 style="margin:0 0 12px;font-size:20px;font-weight:700;color:#111827">${title}</h2>
         <div style="height:3px;width:48px;background:${BRAND};border-radius:2px;margin-bottom:20px"></div>
         <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.7">รหัสยืนยันของคุณคือ:</p>
-        <!-- Code box -->
         <div style="background:#f0fdf4;border:2px dashed ${BRAND};border-radius:12px;padding:20px;text-align:center;margin-bottom:20px">
           <span style="font-size:40px;font-weight:800;letter-spacing:12px;color:${BRAND};font-family:monospace">${code}</span>
         </div>
@@ -130,37 +118,40 @@ export async function sendNotificationEmail(
   link?: string,
   type?: string,
 ) {
-  const transporter = createTransporter()
-  if (!transporter) {
+  if (to.endsWith('@farmdirect.local')) return
+  const resend = getResend()
+  if (!resend) {
     console.log(`[DEV EMAIL] to=${to} subject="${subject}" body="${body}"`)
     return
   }
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+  const { error } = await resend.emails.send({
+    from: FROM,
     to,
     subject: `[FarmDirect] ${subject}`,
     html: notificationTemplate(title, body, link, type),
-  }).catch((err) => console.error('[EMAIL ERROR]', err.message))
+  })
+  if (error) console.error('[EMAIL ERROR]', error.message)
 }
 
 export async function sendVerificationEmail(email: string, code: string, type: 'verify' | 'reset' = 'verify') {
   if (email.endsWith('@farmdirect.local')) return
   const isReset = type === 'reset'
   const subject = isReset ? 'รีเซ็ตรหัสผ่าน FarmDirect' : 'ยืนยันอีเมล FarmDirect'
-  const title = isReset ? 'รีเซ็ตรหัสผ่านของคุณ' : 'ยืนยันอีเมลของคุณ'
-  const expiry = isReset ? '15 นาที' : '10 นาที'
+  const title   = isReset ? 'รีเซ็ตรหัสผ่านของคุณ'       : 'ยืนยันอีเมลของคุณ'
+  const expiry  = isReset ? '15 นาที'                      : '10 นาที'
 
-  const transporter = createTransporter()
-  if (!transporter) {
+  const resend = getResend()
+  if (!resend) {
     console.log(`[DEV] ${type} code for ${email}: ${code}`)
     return
   }
   console.log(`[EMAIL] sending ${type} to ${email}`)
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+  const { error } = await resend.emails.send({
+    from: FROM,
     to: email,
     subject,
     html: verificationTemplate(title, code, expiry),
-  }).then(() => console.log(`[EMAIL] sent ok → ${email}`))
-    .catch((err) => console.error(`[EMAIL ERROR] ${type} to ${email}:`, err.message))
+  })
+  if (error) console.error(`[EMAIL ERROR] ${type} to ${email}:`, error.message)
+  else console.log(`[EMAIL] sent ok → ${email}`)
 }
