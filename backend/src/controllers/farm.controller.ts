@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client'
 import prisma from '../config/database'
 import { getActivePricingConfig, calcDisplayPrice } from '../utils/pricing'
 import { getActiveShippingConfig } from '../utils/shipping'
-import { notify, notifyAllAdmins } from '../utils/notification'
+import { notifyWithEmail, notifyAllAdminsWithEmail } from '../utils/notification'
 
 function injectDisplayPrice(products: any[], pricing: any) {
   return products.map((p) => ({ ...p, displayPrice: calcDisplayPrice(Number(p.price), pricing) }))
@@ -51,7 +51,7 @@ export const createFarm = async (req: Request, res: Response, next: NextFunction
     await prisma.farmApprovalLog.create({
       data: { farmId: farm.id, actorId: req.user.id, action: 'SUBMITTED', note: 'ยื่นขอสร้างฟาร์มครั้งแรก' },
     })
-    notifyAllAdmins('FARM_SUBMITTED', 'ฟาร์มใหม่รอการอนุมัติ', `ฟาร์ม "${farm.name}" ส่งคำขออนุมัติ`, `/admin/farms`)
+    notifyAllAdminsWithEmail('FARM_SUBMITTED', 'ฟาร์มใหม่รอการอนุมัติ', `ฟาร์ม "${farm.name}" ส่งคำขออนุมัติ`, `/admin/farms`)
     res.status(201).json(farm)
   } catch (err) {
     next(err)
@@ -314,7 +314,7 @@ export const createFarmReview = async (req: Request, res: Response, next: NextFu
       create: { userId: req.user.id, farmId, rating, comment },
       include: { user: { select: { name: true, avatar: true } } },
     })
-    notify(farm.userId, 'FARM_REVIEW', 'มีรีวิวฟาร์มใหม่', `${review.user.name} ให้คะแนน ${rating} ดาว${comment ? `: "${comment.slice(0, 40)}"` : ''}`, `/farms/${farm.slug ?? farm.id}#reviews`)
+    notifyWithEmail(farm.userId, 'FARM_REVIEW', 'มีรีวิวฟาร์มใหม่', `${review.user.name} ให้คะแนน ${rating} ดาว${comment ? `: "${comment.slice(0, 40)}"` : ''}`, `/farms/${farm.slug ?? farm.id}#reviews`)
     res.json(review)
   } catch (err) {
     next(err)
@@ -380,7 +380,7 @@ export const resubmitFarm = async (req: Request, res: Response, next: NextFuncti
     await prisma.farmApprovalLog.create({
       data: { farmId: farm.id, actorId: req.user.id, action: 'SUBMITTED', note: message?.trim() || 'ยื่นขออนุมัติใหม่' },
     })
-    notifyAllAdmins('FARM_SUBMITTED', 'ฟาร์มยื่นขออนุมัติใหม่', `ฟาร์ม "${farm.name}" ยื่นขออนุมัติซ้ำ`, `/admin/farms`)
+    notifyAllAdminsWithEmail('FARM_SUBMITTED', 'ฟาร์มยื่นขออนุมัติใหม่', `ฟาร์ม "${farm.name}" ยื่นขออนุมัติซ้ำ`, `/admin/farms`)
     res.json(farm)
   } catch (err) {
     next(err)
@@ -615,7 +615,7 @@ export const acceptInvitation = async (req: Request, res: Response, next: NextFu
       data: { status: 'ACCEPTED' },
       include: { farm: { select: { id: true, name: true, image: true, province: true, userId: true } } },
     })
-    notify(updated.farm.userId, 'FARM_ADMIN_ACCEPTED', 'ผู้ใช้ตอบรับคำเชิญ', `มีผู้ดูแลเพิ่มเติมในฟาร์ม "${updated.farm.name}" แล้ว`, `/seller/admins`)
+    notifyWithEmail(updated.farm.userId, 'FARM_ADMIN_ACCEPTED', 'ผู้ใช้ตอบรับคำเชิญ', `มีผู้ดูแลเพิ่มเติมในฟาร์ม "${updated.farm.name}" แล้ว`, `/seller/admins`)
     res.json(updated)
   } catch (err) {
     next(err)

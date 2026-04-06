@@ -17,6 +17,16 @@ export async function notifyAllAdmins(type: string, title: string, body: string,
   return notifyMany(admins.map((a) => a.id), type, title, body, link)
 }
 
+export async function notifyAllAdminsWithEmail(type: string, title: string, body: string, link?: string) {
+  const admins = await prisma.user.findMany({ where: { role: { in: ['ADMIN', 'HOST'] }, isActive: true }, select: { id: true, email: true } })
+  await notifyMany(admins.map((a) => a.id), type, title, body, link)
+  for (const admin of admins) {
+    if (admin.email && !admin.email.endsWith('@farmdirect.local')) {
+      sendNotificationEmail(admin.email, title, title, body, link, type).catch(() => {})
+    }
+  }
+}
+
 // notify + ส่ง email พร้อมกัน (ดึง email จาก userId อัตโนมัติ)
 export async function notifyWithEmail(userId: string, type: string, title: string, body: string, link?: string) {
   // บันทึก notification ใน DB ก่อน (await)

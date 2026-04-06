@@ -118,7 +118,7 @@ export const sendVerifyEmail = async (req: Request, res: Response, next: NextFun
       data: { emailVerifyCode: code, emailVerifyExpiry: expiry },
     })
 
-    await sendVerificationEmail(user.email, code)
+    sendVerificationEmail(user.email, code).catch((err) => console.error('[EMAIL ERROR]', err.message))
     res.json({ message: 'Verification email sent' })
   } catch (err) {
     next(err)
@@ -139,7 +139,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
       data: { passwordResetToken: code, passwordResetExpiry: expiry },
     })
 
-    await sendVerificationEmail(user.email, code, 'reset')
+    sendVerificationEmail(user.email, code, 'reset').catch((err) => console.error('[EMAIL ERROR]', err.message))
     res.json({ message: 'sent' })
   } catch (err) {
     next(err)
