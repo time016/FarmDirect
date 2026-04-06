@@ -1,4 +1,6 @@
 import 'dotenv/config'
+import dns from 'dns'
+dns.setDefaultResultOrder('ipv4first') // Railway does not support IPv6 outbound — force all DNS to resolve IPv4
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
