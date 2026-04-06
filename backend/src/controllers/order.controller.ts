@@ -4,7 +4,7 @@ import prisma from '../config/database'
 import { getActivePricingConfig, calcDisplayPrice } from '../utils/pricing'
 import { getActiveShippingConfig, calcShipping } from '../utils/shipping'
 import { getMyFarmByUser } from './farm.controller'
-import { notify } from '../utils/notification'
+import { notifyWithEmail } from '../utils/notification'
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -99,7 +99,7 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       if (farmId) {
         const farm = await prisma.farm.findUnique({ where: { id: farmId }, select: { userId: true, name: true } })
         if (farm) {
-          notify(farm.userId, 'ORDER_PLACED', 'มีคำสั่งซื้อใหม่', `ออเดอร์ #${order.id.slice(0, 8).toUpperCase()} — ฿${Number(order.totalAmount).toLocaleString()}`, `/seller/orders`)
+          notifyWithEmail(farm.userId, 'ORDER_PLACED', 'มีคำสั่งซื้อใหม่', `ออเดอร์ #${order.id.slice(0, 8).toUpperCase()} — ฿${Number(order.totalAmount).toLocaleString()}`, `/seller/orders`)
         }
       }
     }
@@ -222,7 +222,7 @@ export const cancelOrder = async (req: Request, res: Response, next: NextFunctio
       : null
     if (farmId) {
       const farm = await prisma.farm.findUnique({ where: { id: farmId }, select: { userId: true } })
-      if (farm) notify(farm.userId, 'ORDER_CANCELLED', 'ผู้ซื้อยกเลิกออเดอร์', `ออเดอร์ #${id.slice(0, 8).toUpperCase()} ถูกยกเลิกโดยผู้ซื้อ`, `/seller/orders`)
+      if (farm) notifyWithEmail(farm.userId, 'ORDER_CANCELLED', 'ผู้ซื้อยกเลิกออเดอร์', `ออเดอร์ #${id.slice(0, 8).toUpperCase()} ถูกยกเลิกโดยผู้ซื้อ`, `/seller/orders`)
     }
 
     res.json({ message: 'ยกเลิกคำสั่งซื้อแล้ว' })
@@ -323,7 +323,7 @@ export const updateOrderStatus = async (req: Request, res: Response, next: NextF
     }
     const msg = msgMap[status]
     if (msg && updated.user) {
-      notify(updated.user.id, `ORDER_${status}`, msg.title, msg.body, `/orders/${id}`)
+      notifyWithEmail(updated.user.id, `ORDER_${status}`, msg.title, msg.body, `/orders/${id}`)
     }
 
     res.json(updated)
