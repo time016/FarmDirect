@@ -121,6 +121,7 @@ export const sendVerifyEmail = async (req: Request, res: Response, next: NextFun
       data: { emailVerifyCode: code, emailVerifyExpiry: expiry },
     })
 
+    console.log(`[VERIFY] calling sendVerificationEmail to=${user.email}`)
     sendVerificationEmail(user.email, code).catch((err) => console.error('[EMAIL ERROR]', err.message))
     res.json({ message: 'Verification email sent' })
   } catch (err) {
