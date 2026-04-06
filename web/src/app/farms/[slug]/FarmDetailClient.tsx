@@ -183,15 +183,16 @@ export default function FarmDetailPage() {
       <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
 
         {/* Slideshow */}
-        <div className="relative h-64 bg-gray-100 overflow-hidden">
+        <div className="relative bg-gray-100 overflow-hidden">
           {slideImages.length > 0 ? (
             <>
               <Image
                 src={slideImages[slideIndex]}
                 alt={`${farm.name} ${slideIndex + 1}`}
-                fill
+                width={1200}
+                height={800}
                 sizes="(max-width:768px) 100vw, 50vw"
-                className="object-contain sm:object-cover transition-opacity duration-300"
+                className="w-full h-auto transition-opacity duration-300"
               />
               {slideImages.length > 1 && (
                 <>
