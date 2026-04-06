@@ -12,7 +12,7 @@ function inputCls(invalid: boolean) {
   return `w-full border rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 transition ${invalid ? 'border-red-400 focus:ring-red-400 bg-red-50' : 'border-gray-300 focus:ring-green-500'}`
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+import { API_BASE_URL } from '@/lib/api'
 
 function useOAuthLogin(onClose: () => void) {
   const { loginWithToken } = useAuthStore()
@@ -21,7 +21,7 @@ function useOAuthLogin(onClose: () => void) {
     const w = 520, h = 620
     const left = Math.round(window.screenX + (window.outerWidth - w) / 2)
     const top = Math.round(window.screenY + (window.outerHeight - h) / 2)
-    const popup = window.open(`${API_URL}/auth/${provider}`, 'oauth', `width=${w},height=${h},left=${left},top=${top}`)
+    const popup = window.open(`${API_BASE_URL}/auth/${provider}`, 'oauth', `width=${w},height=${h},left=${left},top=${top}`)
 
     let done = false
     const cleanup = () => {

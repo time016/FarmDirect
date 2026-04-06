@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import FarmDetailClient from './FarmDetailClient'
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000/api'
+import { API_BASE_URL as API } from '@/lib/api'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params

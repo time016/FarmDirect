@@ -17,6 +17,7 @@ import adminRoutes from './routes/admin.routes'
 import notificationRoutes from './routes/notification.routes'
 
 const app = express()
+app.set('trust proxy', 1) // trust Railway's reverse proxy for rate-limit IP detection
 
 // Middleware
 const allowedOrigins = [
