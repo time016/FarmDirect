@@ -28,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="space-y-6">
       {/* Tab bar */}
-      <div className="bg-white border border-gray-200 rounded-xl p-1 flex gap-1 flex-wrap">
+      <div className="bg-white border border-gray-200 rounded-xl p-1 flex gap-1 flex-wrap overflow-x-auto">
         {TABS.map(({ label, href, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
           return (

@@ -31,7 +31,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Order summary */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-3 sm:p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">ภาพรวมคำสั่งซื้อ</p>
           <div className="flex gap-1">
@@ -47,7 +47,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-4">
+          <div className="bg-blue-50 dark:bg-blue-900/30 rounded-xl p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-2">
               <ShoppingBag size={16} className="text-blue-500" />
               <span className="text-sm font-medium text-blue-600 dark:text-blue-400">คำสั่งซื้อ</span>
@@ -60,7 +60,7 @@ export default function AdminDashboardPage() {
               </p>
             )}
           </div>
-          <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-4">
+          <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp size={16} className="text-green-500" />
               <span className="text-sm font-medium text-green-600 dark:text-green-400">ยอดขายรวม</span>
@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statCards.map((s) => (
-          <div key={s.label} className={`${s.bg} rounded-xl p-5`}>
+          <div key={s.label} className={`${s.bg} rounded-xl p-3 sm:p-5`}>
             <div className="flex justify-between items-start mb-3">
               {s.icon}
             </div>

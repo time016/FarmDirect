@@ -184,7 +184,7 @@ export default function EditFarmClient({ provinces }: { provinces: ProvinceOptio
       )}
 
       {/* ข้อมูลทั่วไป */}
-      <div className="bg-white rounded-xl p-6 border border-gray-100 space-y-5">
+      <div className="bg-white rounded-xl p-3 sm:p-6 border border-gray-100 space-y-5">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-gray-600">ข้อมูลทั่วไป</h2>
           {farm?.id && (
@@ -250,7 +250,7 @@ export default function EditFarmClient({ provinces }: { provinces: ProvinceOptio
       </div>
 
       {/* Image Manager */}
-      <div className="bg-white rounded-xl p-6 border border-gray-100 space-y-4">
+      <div className="bg-white rounded-xl p-3 sm:p-6 border border-gray-100 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-semibold text-gray-600">รูปภาพฟาร์ม</h2>
@@ -287,7 +287,7 @@ export default function EditFarmClient({ provinces }: { provinces: ProvinceOptio
       </div>
 
       {/* Video Links */}
-      <div className="bg-white rounded-xl p-6 border border-gray-100 space-y-4">
+      <div className="bg-white rounded-xl p-3 sm:p-6 border border-gray-100 space-y-4">
         <div>
           <h2 className="font-semibold text-gray-600">วิดีโอแนะนำฟาร์ม</h2>
           <p className="text-sm text-gray-500 mt-0.5">รองรับ YouTube, Facebook, TikTok</p>

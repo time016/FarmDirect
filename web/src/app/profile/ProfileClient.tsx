@@ -267,7 +267,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
       </div>
 
       {tab === 'profile' && (
-        <div className="bg-white rounded-xl p-6 border border-gray-100">
+        <div className="bg-white rounded-xl p-3 sm:p-6 border border-gray-100">
           {/* Avatar */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative group cursor-pointer" onClick={() => avatarInputRef.current?.click()}>
@@ -429,7 +429,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
           </div>
 
           {showForm && (
-            <div className="bg-white rounded-xl p-5 border border-green-200">
+            <div className="bg-white rounded-xl p-3 sm:p-5 border border-green-200">
               <h3 className="font-semibold text-gray-800 mb-4">{editId ? 'แก้ไขที่อยู่' : 'เพิ่มที่อยู่ใหม่'}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 
@@ -515,7 +515,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
           )}
 
           {addresses?.map((addr) => (
-            <div key={addr.id} className="bg-white rounded-xl p-5 border border-gray-100 flex justify-between items-start">
+            <div key={addr.id} className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100 flex justify-between items-start">
               <div>
                 {addr.isDefault && <span className="text-sm bg-green-100 text-green-700 px-2 py-0.5 rounded-full mb-2 inline-block">หลัก</span>}
                 <p className="font-medium text-gray-800">{addr.recipient} · {addr.phone}</p>

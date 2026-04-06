@@ -201,7 +201,7 @@ export default function CartPage() {
           const price = Number(item.product.displayPrice ?? item.product.price)
           return (
             <div key={item.id} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-              <div className="p-4 flex gap-4">
+              <div className="p-3 sm:p-4 flex gap-4">
                 <Link href={`/products/${item.product.id}`}
                   className="relative w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 block hover:opacity-90 transition">
                   {item.product.images[0] ? (
@@ -248,7 +248,7 @@ export default function CartPage() {
         {/* Collapsible header */}
         <button
           onClick={() => setSummaryOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-5 pt-5 pb-3 text-left"
+          className="w-full flex items-center justify-between px-3 sm:px-5 pt-4 sm:pt-5 pb-3 text-left"
         >
           <span className="text-lg font-semibold text-gray-700 flex items-center gap-2">
             <Package size={20} className="text-gray-500" />
@@ -259,7 +259,7 @@ export default function CartPage() {
 
         {/* Collapsible body — breakdown per farm */}
         {summaryOpen && shippingConfig && (
-          <div className="px-5 pb-4 border-t border-gray-50 pt-3 space-y-4">
+          <div className="px-3 sm:px-5 pb-4 border-t border-gray-50 pt-3 space-y-4">
             {farmCalcs.map((g) => (
               <div key={g.farmId}>
                 {/* Farm header */}
@@ -336,7 +336,7 @@ export default function CartPage() {
         )}
 
         {/* Always-visible summary */}
-        <div className="px-5 pb-5 space-y-2.5">
+        <div className="px-3 sm:px-5 pb-4 sm:pb-5 space-y-2.5">
           <div className="flex justify-between text-sm text-gray-600">
             <span>ยอดสินค้า</span>
             <span>฿{totalSubtotal.toLocaleString()}</span>

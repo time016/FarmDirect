@@ -185,7 +185,7 @@ export default function AdminFarmsPage() {
           ) : (
             <div className="space-y-3">
               {farms.map((farm) => (
-                <div key={farm.id} className="bg-white rounded-xl border border-gray-100 p-5 space-y-3">
+                <div key={farm.id} className="bg-white rounded-xl border border-gray-100 p-3 sm:p-5 space-y-3">
                   <div className="flex items-start justify-between gap-4">
                     {/* Info */}
                     <div className="min-w-0 flex-1">

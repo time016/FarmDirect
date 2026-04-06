@@ -78,7 +78,7 @@ export default function AdminOrdersPage() {
             const isOpen = expanded === order.id
             return (
               <div key={order.id} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-                <div className="px-5 py-4 flex items-center gap-3">
+                <div className="px-3 sm:px-5 py-3 sm:py-4 flex items-center gap-3">
                   <button onClick={() => setExpanded(isOpen ? null : order.id)} className="text-gray-500 hover:text-gray-700">
                     {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </button>
@@ -96,7 +96,7 @@ export default function AdminOrdersPage() {
                 </div>
 
                 {isOpen && (
-                  <div className="border-t border-gray-100 px-5 pb-4 pt-3 space-y-3">
+                  <div className="border-t border-gray-100 px-3 sm:px-5 pb-3 pt-2 sm:pt-3 space-y-3">
                     <div className="space-y-1.5">
                       {order.items.map((item) => (
                         <div key={item.id} className="flex justify-between text-sm">

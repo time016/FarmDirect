@@ -185,7 +185,7 @@ export default function OrderDetailPage() {
 
       {/* Progress bar */}
       {order.status !== 'CANCELLED' && (
-        <div className="bg-white rounded-xl p-5 border border-gray-100">
+        <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
           <ProgressBar status={order.status} />
         </div>
       )}
@@ -239,7 +239,7 @@ export default function OrderDetailPage() {
         return (
           <div key={group.farmId} className="bg-white rounded-xl border border-gray-100 overflow-hidden">
             {/* Farm header */}
-            <div className="flex items-center justify-between px-5 py-3 bg-green-50 border-b border-green-100">
+            <div className="flex items-center justify-between px-3 sm:px-5 py-2 sm:py-3 bg-green-50 border-b border-green-100">
               <div className="flex items-center gap-2">
                 <Store size={15} className="text-green-600" />
                 {group.farmPageId ? (
@@ -259,7 +259,7 @@ export default function OrderDetailPage() {
             {/* Items */}
             <div className="divide-y divide-gray-50">
               {group.items.map((item) => (
-                <div key={item.id} className="flex gap-3 items-center px-5 py-4">
+                <div key={item.id} className="flex gap-3 items-center px-3 sm:px-5 py-3 sm:py-4">
                   <Link href={`/products/${item.product.id}`}
                     className="relative w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 hover:opacity-90 transition block">
                     {item.product.images?.[0] ? (
@@ -285,7 +285,7 @@ export default function OrderDetailPage() {
             </div>
 
             {/* Farm subtotal */}
-            <div className="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between text-sm font-semibold text-gray-700">
+            <div className="px-3 sm:px-5 py-2 sm:py-3 bg-gray-50 border-t border-gray-100 flex justify-between text-sm font-semibold text-gray-700">
               <span>รวมฟาร์มนี้</span>
               <span>฿{groupSubtotal.toLocaleString()}</span>
             </div>
@@ -294,7 +294,7 @@ export default function OrderDetailPage() {
       })}
 
       {/* Grand total summary */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100 space-y-2">
+      <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100 space-y-2">
         <div className="flex justify-between text-sm text-gray-600">
           <span>ยอดสินค้ารวม</span>
           <span>฿{subtotal.toLocaleString()}</span>
@@ -314,7 +314,7 @@ export default function OrderDetailPage() {
       </div>
 
       {/* Address */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100">
+      <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
         <h2 className="font-semibold text-gray-600 mb-3 flex items-center gap-2"><MapPin size={16} /> ที่อยู่จัดส่ง</h2>
         <p className="font-medium text-gray-800">{order.address.recipient} · {order.address.phone}</p>
         <p className="text-sm text-gray-600 mt-1">
@@ -324,7 +324,7 @@ export default function OrderDetailPage() {
 
       {/* Payment */}
       {order.payment && (
-        <div className="bg-white rounded-xl p-5 border border-gray-100">
+        <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
           <h2 className="font-semibold text-gray-600 mb-3 flex items-center gap-2"><CreditCard size={16} /> การชำระเงิน</h2>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">วิธีชำระ</span>

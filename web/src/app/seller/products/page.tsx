@@ -54,7 +54,7 @@ export default function SellerProductsPage() {
           {/* Mobile cards */}
           <div className="md:hidden space-y-2">
             {farm.products?.map((p: Product) => (
-              <div key={p.id} className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex items-center gap-3">
+              <div key={p.id} className="bg-white rounded-xl border border-gray-100 px-3 py-3 flex items-center gap-3">
                 {/* Image */}
                 <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                   {(p.images as string[])?.[0] ? (

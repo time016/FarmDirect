@@ -221,7 +221,7 @@ export default function FarmDetailPage() {
           )}
         </div>
 
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           {/* Farm info display / edit */}
           {editingFarm ? (
             <div className="space-y-3">
@@ -346,7 +346,7 @@ export default function FarmDetailPage() {
 
       {/* Suspended / Rejected Banner */}
       {isOwner && !farm.isVerified && (farm.rejectReason || farm.isSuspended) && (
-        <div className={`border rounded-xl p-5 space-y-3 ${farm.isSuspended ? 'bg-orange-50 border-orange-200' : 'bg-red-50 border-red-200'}`}>
+        <div className={`border rounded-xl p-3 sm:p-5 space-y-3 ${farm.isSuspended ? 'bg-orange-50 border-orange-200' : 'bg-red-50 border-red-200'}`}>
           <div className="flex items-start gap-2">
             <AlertCircle size={18} className={`mt-0.5 flex-shrink-0 ${farm.isSuspended ? 'text-orange-500' : 'text-red-500'}`} />
             <div>
@@ -408,7 +408,7 @@ export default function FarmDetailPage() {
 
         {/* Add Product Form */}
         {addingProduct && (
-          <div className="bg-white rounded-xl p-6 border border-green-200 mb-6">
+          <div className="bg-white rounded-xl p-3 sm:p-6 border border-green-200 mb-6">
             <h3 className="font-semibold text-gray-600 mb-4">เพิ่มสินค้าใหม่</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
@@ -561,7 +561,7 @@ export default function FarmDetailPage() {
 
         {/* Inline review form */}
         {showReviewForm && (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-5 mb-5 space-y-4">
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-3 sm:p-5 mb-5 space-y-4">
             <p className="font-semibold text-gray-800">แสดงความคิดเห็นของคุณ</p>
 
             {/* Star selector */}

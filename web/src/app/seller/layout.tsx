@@ -64,7 +64,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Tab bar */}
-      <div className="bg-white border border-gray-200 rounded-xl p-1 flex gap-1 flex-wrap">
+      <div className="bg-white border border-gray-200 rounded-xl p-1 flex gap-1 flex-wrap overflow-x-auto">
         {tabs.map(({ label, href, icon: Icon }) => {
           const isActive = href.startsWith('/seller')
             ? pathname === href || pathname.startsWith(href + '/')

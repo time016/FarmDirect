@@ -61,7 +61,7 @@ export default function ProductCard({ product }: Props) {
           )}
         </div>
 
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <p className="text-sm text-green-600 mb-1">{product.farm?.name} · {product.farm?.province}</p>
           <h3 className="font-semibold text-gray-600 line-clamp-1">{product.name}</h3>
           <p className="text-sm text-gray-500 mb-2">{product.category?.name}</p>

@@ -160,7 +160,7 @@ export default function SellerOrdersPage() {
             return (
               <div key={order.id} className={`bg-white rounded-xl border overflow-hidden transition-all duration-200 ${isOpen ? 'border-green-400 shadow-md shadow-green-100 ring-1 ring-green-300' : expanded ? 'border-gray-100 opacity-40' : 'border-gray-100'}`}>
                 {/* Header row */}
-                <div className="p-4 flex items-center gap-3 cursor-pointer select-none" onClick={() => setExpanded(isOpen ? null : order.id)}>
+                <div className="p-3 sm:p-4 flex items-center gap-3 cursor-pointer select-none" onClick={() => setExpanded(isOpen ? null : order.id)}>
                   <span className="text-gray-500">
                     {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </span>
@@ -231,7 +231,7 @@ export default function SellerOrdersPage() {
 
                 {/* Expanded detail */}
                 {isOpen && (
-                  <div className="border-t border-gray-100 px-4 pb-4 pt-3 space-y-3">
+                  <div className="border-t border-gray-100 px-3 pb-3 pt-2 sm:pt-3 space-y-3">
                     {/* Items */}
                     <div className="space-y-2">
                       {order.items.map((item) => (

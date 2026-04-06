@@ -70,7 +70,7 @@ export default function SellerAdminsPage() {
       </div>
 
       {/* Search & invite */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-4">
+      <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-5 space-y-4">
         <h2 className="font-semibold text-gray-600 flex items-center gap-2">
           <UserPlus size={16} />
           เชิญสมาชิก

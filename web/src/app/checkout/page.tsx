@@ -147,7 +147,7 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <div className="md:col-span-3 space-y-4">
           {/* Address */}
-          <div className="bg-white rounded-xl p-5 border border-gray-100">
+          <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-semibold text-gray-600 flex items-center gap-2"><MapPin size={16} /> ที่อยู่จัดส่ง</h2>
               <button onClick={() => router.push('/profile?tab=addresses&addAddress=1')} className="text-green-600 text-sm flex items-center gap-1">
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Payment */}
-          <div className="bg-white rounded-xl p-5 border border-gray-100">
+          <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
             <h2 className="font-semibold text-gray-600 mb-3">วิธีชำระเงิน</h2>
             <div className="space-y-2">
               {(Object.keys(paymentLabels) as PaymentMethod[]).map((method) => (
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Note */}
-          <div className="bg-white rounded-xl p-5 border border-gray-100">
+          <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100">
             <h2 className="font-semibold text-gray-600 mb-3">หมายเหตุ</h2>
             <textarea value={note} onChange={(e) => setNote(e.target.value)}
               placeholder="ระบุหมายเหตุ (ถ้ามี)" rows={3}
@@ -197,7 +197,7 @@ export default function CheckoutPage() {
 
         {/* Order Summary */}
         <div className="md:col-span-2">
-          <div className="bg-white rounded-xl p-5 border border-gray-100 sticky top-4 space-y-4">
+          <div className="bg-white rounded-xl p-3 sm:p-5 border border-gray-100 sticky top-4 space-y-4">
             <h2 className="font-semibold text-gray-600">สรุปรายการ</h2>
 
             {/* Per-farm breakdown */}

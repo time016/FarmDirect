@@ -28,7 +28,7 @@ export default function FarmCard({ farm }: { farm: Farm }) {
             </div>
           )}
         </div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3 className="font-semibold text-green-600">{farm.name}</h3>
           <div className="flex items-center gap-3 mt-1">
             <p className="text-sm text-gray-600 flex items-center gap-1">
