@@ -38,7 +38,7 @@ export default function Footer() {
   }
 
   return (
-    <footer className="max-w-7xl mx-auto px-4 pb-10 space-y-6 mt-12">
+    <footer className="max-w-7xl mx-auto px-0 sm:px-4 pb-10 space-y-6 mt-12">
       <section className="bg-gradient-to-r from-green-700 to-green-500 text-white rounded-2xl p-10 text-center">
         <h2 className="text-4xl font-bold mb-3">สินค้าเกษตรจากฟาร์มสู่มือคุณ</h2>
         <p className="text-green-100 text-lg mb-6">สด ปลอดภัย คุณภาพดี ตรงจากเกษตรกร ไม่ผ่านพ่อค้าคนกลาง</p>

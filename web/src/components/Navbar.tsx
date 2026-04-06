@@ -68,7 +68,7 @@ function Avatar({ name, avatar, size = 32 }: { name?: string; avatar?: string; s
       style={{ width: size, height: size }}
     >
       {avatar
-        ? <Image src={avatar} alt={name} fill sizes="80px" className="object-cover" />
+        ? <Image src={avatar} alt={name ?? ''} fill sizes="80px" className="object-cover" />
         : <span className="text-white font-bold" style={{ fontSize: size * 0.4 }}>{name?.[0]?.toUpperCase()}</span>
       }
     </div>
