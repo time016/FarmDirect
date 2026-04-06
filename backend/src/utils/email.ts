@@ -144,6 +144,7 @@ export async function sendNotificationEmail(
 }
 
 export async function sendVerificationEmail(email: string, code: string, type: 'verify' | 'reset' = 'verify') {
+  if (email.endsWith('@farmdirect.local')) return
   const isReset = type === 'reset'
   const subject = isReset ? 'รีเซ็ตรหัสผ่าน FarmDirect' : 'ยืนยันอีเมล FarmDirect'
   const title = isReset ? 'รีเซ็ตรหัสผ่านของคุณ' : 'ยืนยันอีเมลของคุณ'
@@ -154,10 +155,12 @@ export async function sendVerificationEmail(email: string, code: string, type: '
     console.log(`[DEV] ${type} code for ${email}: ${code}`)
     return
   }
+  console.log(`[EMAIL] sending ${type} to ${email}`)
   await transporter.sendMail({
     from: process.env.SMTP_FROM || process.env.SMTP_USER,
     to: email,
     subject,
     html: verificationTemplate(title, code, expiry),
-  }).catch((err) => console.error('[EMAIL ERROR]', err.message))
+  }).then(() => console.log(`[EMAIL] sent ok → ${email}`))
+    .catch((err) => console.error(`[EMAIL ERROR] ${type} to ${email}:`, err.message))
 }

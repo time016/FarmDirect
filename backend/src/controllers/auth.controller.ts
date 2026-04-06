@@ -105,6 +105,9 @@ export const sendVerifyEmail = async (req: Request, res: Response, next: NextFun
     const user = await prisma.user.findUnique({ where: { id: req.user.id } })
     if (!user) return res.status(404).json({ message: 'User not found' })
     if (user.emailVerified) return res.status(400).json({ message: 'Email already verified' })
+    if (user.email.endsWith('@farmdirect.local')) {
+      return res.status(400).json({ message: 'บัญชีนี้ไม่มีอีเมลจริง กรุณาเพิ่มอีเมลในโปรไฟล์ก่อน' })
+    }
 
     if (user.emailVerifyExpiry && user.emailVerifyExpiry.getTime() - Date.now() > 9 * 60 * 1000) {
       return res.status(429).json({ message: 'กรุณารอก่อนขอรหัสใหม่' })
