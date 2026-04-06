@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import { useCartStore } from '@/store/cartStore'
-import { useAuthModalStore } from '@/store/authModalStore'
 import api from '@/lib/api'
+import LoginRequired from '@/components/LoginRequired'
 import { Address, CartItem, PaymentMethod } from '@/types'
 import { MapPin, Plus, Truck, Store } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -50,7 +50,6 @@ function calcFarmShipping(
 export default function CheckoutPage() {
   const { isAuthenticated } = useAuthStore()
   const { cart, fetchCart, clearCart } = useCartStore()
-  const { openLogin } = useAuthModalStore()
   const router = useRouter()
   const qc = useQueryClient()
   const [selectedAddress, setSelectedAddress] = useState<string>('')
@@ -58,9 +57,10 @@ export default function CheckoutPage() {
   const [note, setNote] = useState('')
 
   useEffect(() => {
-    if (!isAuthenticated) { openLogin(); return }
-    fetchCart()
+    if (isAuthenticated) fetchCart()
   }, [isAuthenticated])
+
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดำเนินการสั่งซื้อ" />
 
   const { data: addresses } = useQuery<Address[]>({
     queryKey: ['addresses'],

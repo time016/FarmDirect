@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useAuthModalStore } from '@/store/authModalStore'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
 import api from '@/lib/api'
@@ -12,6 +12,7 @@ import { Address } from '@/types'
 import { Plus, Trash2, Pencil, Camera, Store, Check, X, ShieldCheck, ShieldAlert, Mail, Tractor } from 'lucide-react'
 import toast from 'react-hot-toast'
 import AvatarCropModal from '@/components/AvatarCropModal'
+import LoginRequired from '@/components/LoginRequired'
 
 interface FarmInvitation {
   id: string
@@ -48,7 +49,6 @@ const requiredKeys = ['recipient', 'phone', 'address', 'province', 'district', '
 
 export default function ProfileClient({ provinces }: { provinces: ProvinceOption[] }) {
   const { isAuthenticated, user, setUser } = useAuthStore()
-  const { openLogin } = useAuthModalStore()
   const router = useRouter()
   const searchParams = useSearchParams()
   const qc = useQueryClient()
@@ -71,7 +71,7 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
   const [addrForm, setAddrForm] = useState({ ...emptyAddr })
   const [submitted, setSubmitted] = useState(false)
 
-  useEffect(() => { if (!isAuthenticated) openLogin() }, [isAuthenticated])
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูโปรไฟล์" />
 
   useEffect(() => {
     if (searchParams.get('tab') === 'addresses') {

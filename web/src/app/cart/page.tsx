@@ -6,11 +6,11 @@ import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import { useCartStore } from '@/store/cartStore'
 import { useAuthStore } from '@/store/authStore'
-import { useAuthModalStore } from '@/store/authModalStore'
 import api from '@/lib/api'
 import { Order, CartItem } from '@/types'
 import { Trash2, Plus, Minus, ShoppingBag, Package, ChevronRight, Truck, ChevronDown, Scale, Store } from 'lucide-react'
 import toast from 'react-hot-toast'
+import LoginRequired from '@/components/LoginRequired'
 
 function RecentProductCard({ product }: { product: { id: string; name: string; images: unknown; farm?: { id?: string; name?: string } } }) {
   const image = (product.images as string[])?.[0]
@@ -92,14 +92,14 @@ function calcFarmShipping(
 export default function CartPage() {
   const { cart, fetchCart, updateItem, removeItem } = useCartStore()
   const { isAuthenticated } = useAuthStore()
-  const { openLogin } = useAuthModalStore()
   const router = useRouter()
   const [summaryOpen, setSummaryOpen] = useState(false)
 
   useEffect(() => {
-    if (!isAuthenticated) { openLogin(); return }
-    fetchCart()
+    if (isAuthenticated) fetchCart()
   }, [isAuthenticated])
+
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูตะกร้าสินค้า" />
 
   const { data: ordersData } = useQuery({
     queryKey: ['orders'],

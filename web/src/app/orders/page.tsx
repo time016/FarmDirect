@@ -1,14 +1,12 @@
 'use client'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useQuery } from '@tanstack/react-query'
 import { useAuthStore } from '@/store/authStore'
-import { useAuthModalStore } from '@/store/authModalStore'
 import api from '@/lib/api'
 import { Order, OrderStatus } from '@/types'
 import { Package, Store, ChevronRight, ShoppingBag, Leaf } from 'lucide-react'
+import LoginRequired from '@/components/LoginRequired'
 
 const statusLabel: Record<OrderStatus, string> = {
   PENDING: 'รอชำระเงิน', PAID: 'รอยืนยัน', CONFIRMED: 'กำลังเตรียม',
@@ -143,10 +141,8 @@ function Section({ title, entries, badge }: {
 
 export default function OrdersPage() {
   const { isAuthenticated } = useAuthStore()
-  const { openLogin } = useAuthModalStore()
-  const router = useRouter()
 
-  useEffect(() => { if (!isAuthenticated) openLogin() }, [isAuthenticated])
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูคำสั่งซื้อ" />
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders'],
