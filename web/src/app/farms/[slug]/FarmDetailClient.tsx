@@ -191,7 +191,7 @@ export default function FarmDetailPage() {
                 alt={`${farm.name} ${slideIndex + 1}`}
                 fill
                 sizes="(max-width:768px) 100vw, 50vw"
-                className="object-cover transition-opacity duration-300"
+                className="object-contain sm:object-cover transition-opacity duration-300"
               />
               {slideImages.length > 1 && (
                 <>

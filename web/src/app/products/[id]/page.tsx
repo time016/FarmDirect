@@ -92,7 +92,7 @@ export default function ProductDetailPage() {
                   alt={product.name}
                   fill
                   sizes="(max-width:768px) 100vw, 50vw"
-                  className="object-cover cursor-zoom-in"
+                  className="object-contain sm:object-cover cursor-zoom-in"
                   onClick={() => setViewerOpen(true)}
                 />
                 <button onClick={() => setViewerOpen(true)}
