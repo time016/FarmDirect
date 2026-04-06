@@ -248,7 +248,7 @@ export default function FarmDetailPage() {
           ) : (
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
               <div className="flex-1 min-w-0">
-                <h1 className="text-2xl font-bold text-gray-600">{farm.name}</h1>
+                <h1 className="text-2xl font-bold text-green-600">{farm.name}</h1>
                 <p className="text-gray-600 flex items-center gap-1 mt-1"><MapPin size={14} /> {farm.location}, {farm.province}</p>
                 {farm.description && <p className="text-gray-700 mt-3 text-sm">{farm.description}</p>}
                 <p className="text-sm text-gray-500 mt-2 flex items-center gap-2 flex-wrap">

@@ -28,7 +28,7 @@ export default function FarmCard({ farm }: { farm: Farm }) {
           )}
         </div>
         <div className="p-4">
-          <h3 className="font-semibold text-gray-600">{farm.name}</h3>
+          <h3 className="font-semibold text-green-600">{farm.name}</h3>
           <div className="flex items-center gap-3 mt-1">
             <p className="text-sm text-gray-600 flex items-center gap-1">
               <MapPin size={12} /> {farm.province}
