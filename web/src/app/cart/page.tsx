@@ -99,8 +99,6 @@ export default function CartPage() {
     if (isAuthenticated) fetchCart()
   }, [isAuthenticated])
 
-  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูตะกร้าสินค้า" />
-
   const { data: ordersData } = useQuery({
     queryKey: ['orders'],
     queryFn: () => api.get('/orders').then((r) => r.data),
@@ -124,6 +122,8 @@ export default function CartPage() {
     queryKey: ['shipping-config'],
     queryFn: () => api.get('/farms/shipping-config').then((r) => r.data),
   })
+
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูตะกร้าสินค้า" />
 
   // --- Group items by farm ---
   const farmGroups: { farmId: string; farmName: string; override: FarmOverride; items: CartItem[] }[] = []

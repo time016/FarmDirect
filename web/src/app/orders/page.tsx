@@ -142,13 +142,13 @@ function Section({ title, entries, badge }: {
 export default function OrdersPage() {
   const { isAuthenticated } = useAuthStore()
 
-  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูคำสั่งซื้อ" />
-
   const { data, isLoading } = useQuery({
     queryKey: ['orders'],
     queryFn: () => api.get('/orders').then((r) => r.data),
     enabled: isAuthenticated,
   })
+
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูคำสั่งซื้อ" />
 
   const orders: Order[] = data?.orders ?? []
 

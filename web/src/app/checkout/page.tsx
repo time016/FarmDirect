@@ -60,8 +60,6 @@ export default function CheckoutPage() {
     if (isAuthenticated) fetchCart()
   }, [isAuthenticated])
 
-  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดำเนินการสั่งซื้อ" />
-
   const { data: addresses } = useQuery<Address[]>({
     queryKey: ['addresses'],
     queryFn: () => api.get('/users/addresses').then((r) => r.data),
@@ -138,6 +136,7 @@ export default function CheckoutPage() {
     if (cart !== null && cart.items.length === 0) router.push('/cart')
   }, [cart])
 
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดำเนินการสั่งซื้อ" />
   if (!cart || cart.items.length === 0) return null
 
   return (

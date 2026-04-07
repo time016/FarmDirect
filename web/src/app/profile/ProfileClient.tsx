@@ -71,8 +71,6 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
   const [addrForm, setAddrForm] = useState({ ...emptyAddr })
   const [submitted, setSubmitted] = useState(false)
 
-  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูโปรไฟล์" />
-
   useEffect(() => {
     if (searchParams.get('tab') === 'addresses') {
       setTab('addresses')
@@ -81,6 +79,8 @@ export default function ProfileClient({ provinces }: { provinces: ProvinceOption
       }
     }
   }, [])
+
+  if (!isAuthenticated) return <LoginRequired description="คุณต้องเข้าสู่ระบบก่อนเพื่อดูโปรไฟล์" />
 
   const { data: addresses } = useQuery<Address[]>({
     queryKey: ['addresses'],

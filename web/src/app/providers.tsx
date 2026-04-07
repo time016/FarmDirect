@@ -6,9 +6,9 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
 
 function AuthInit() {
-  const { token, initAuth } = useAuthStore()
+  const { initAuth } = useAuthStore()
   useEffect(() => {
-    if (!token) initAuth()
+    initAuth()
   }, [])
   return null
 }
