@@ -620,7 +620,7 @@ export default function FarmDetailPage() {
             {farmReviewsData.reviews.map((review: { id: string; user: { name: string; avatar: string | null }; rating: number; comment: string | null; createdAt: string }) => (
               <div key={review.id} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 flex gap-3 sm:gap-4">
                 {/* Avatar */}
-                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
+                <div className="relative w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 overflow-hidden">
                   {review.user.avatar
                     ? <Image src={review.user.avatar} alt={review.user.name} fill sizes="40px" className="object-cover" />
                     : review.user.name?.[0]?.toUpperCase()}
