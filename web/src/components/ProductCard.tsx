@@ -64,7 +64,6 @@ export default function ProductCard({ product }: Props) {
         <div className="p-3 sm:p-4">
           <p className="text-sm text-green-600 mb-1">{product.farm?.name} · {product.farm?.province}</p>
           <h3 className="font-semibold text-gray-600 line-clamp-1">{product.name}</h3>
-          <p className="text-sm text-gray-500 mb-2">{product.category?.name}</p>
 
           <div className="flex items-center gap-1 text-yellow-400 text-sm mb-2">
             {[1, 2, 3, 4, 5].map((s) => {
